@@ -11,5 +11,5 @@ Here are some ideas to get you started:
 - 🤔 I’m looking for help with some 
 - 📫 How to reach me: hualulu@seu.edu.cn
 - 😄 Pronouns: ...
-- ⚡ Fun fact: ...
+- ⚡ Fun fact: 啊吐了吐了，个站好难搞，半天没弄好，一点一点添砖加瓦吧，总会搭成师兄那样的555
 -->
