@@ -206,7 +206,7 @@ body {
   background: var(--body-bg-color);
   color: var(--text-color);
   font-family: 'Microsoft YaHei', "PingFang SC", "Microsoft YaHei", sans-serif;
-  font-size: 1em;
+  font-size: 16em;
   line-height: 2;
 }
 @media (max-width: 991px) {
@@ -1189,7 +1189,6 @@ pre .javascript .function {
   margin: 0 auto;
   max-width: 96px;
   padding: 2px;
-  border-radius: 50%;
 }
 .site-author-image {
   transition: transform 1s ease-out;
@@ -1223,7 +1222,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ff0be2;
+  background: #82b922;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
