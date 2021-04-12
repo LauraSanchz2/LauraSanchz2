@@ -173,6 +173,132 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/12/AI-Earth-%E6%97%B6%E5%BA%8F%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cat.png">
+      <meta itemprop="name" content="Laura Sanchz">
+      <meta itemprop="description" content="跳一跳，够得到。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Laura's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/12/AI-Earth-%E6%97%B6%E5%BA%8F%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">AI-Earth-天池时序比赛总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建于：2021-04-12 20:05:41 / 更新于：21:28:33" itemprop="dateCreated datePublished" datetime="2021-04-12T20:05:41+08:00">2021-04-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%AB%9E%E8%B5%9B/" itemprop="url" rel="index"><span itemprop="name">数据竞赛</span></a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%AB%9E%E8%B5%9B/%E5%A4%A9%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">天池</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="عدد الحروف في المقال">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">عدد الحروف في المقال：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="زمن القراءة">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">زمن القراءة &asymp;</span>
+              <span>2 دقائق.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="时序比赛赛后总结"><a href="#时序比赛赛后总结" class="headerlink" title="时序比赛赛后总结"></a>时序比赛赛后总结</h1><blockquote>
+<p>关于时间线的问题</p>
+</blockquote>
+<p>A榜2月初打开，到3月24日截至。其实真正投入的时间也就是两周不到的时间，非常仓促。A榜每日五次被浪费掉的机会在我们最后一周焦灼尝试时十分懊悔。之后如果再参加比赛的话，一定会控制好时间线进行合理安排与模型框架的尝试，避免出现这次这种时间不够用、模型不够试的情况。附上比赛官网（我怕后面连赛题任务都记不得了hh)</p>
+<p><a target="_blank" rel="noopener" href="https://tianchi.aliyun.com/competition/entrance/531871/introduction">https://tianchi.aliyun.com/competition/entrance/531871/introduction</a></p>
+<blockquote>
+<p>关于建模思路与顺序的问题</p>
+</blockquote>
+<p>我们三个其实对时序预测都不是很熟悉，在baseline基础之上，小管自己尝试了LSTM+RNN，之后尝试ResNet+Tranformer发现效果出奇的好（初登场即巅峰，3月25日之后的一周努力全部in vain),但其实并没有做足时序预测问题的调研。</p>
+<p>后来断断续续尝试过将12个预训练模型改成一个规模较大的Resnet再加深transformer的层数，然而效果并不好。</p>
+<p>由于线上线下分差较大，因此师弟认为valid_score的借鉴意义不大。询问雪林的意见之后，我们认为可以将之前效果最好的119个epoch模型用全部的数据进行retrain，然而效果也并不是很好。</p>
+<p>询问了张辉师兄，他说直接用imagenet（CV领域）中的预训练进行训练没有任何道理可讲，应该自己用数据进行训练（用每一个月的nino指数进行训练)，再加载6层的transformer进行训练，然而发现效果也不好（线上残酷的稳定在28分左右）。</p>
+<p>后来尝试大改模型框架，用AAAI2021的best paper中宣称超过transformer的结构informer。用上了decoder，也尝试了transformer的decoder结构，但是！效果都不好！</p>
+<p>心态炸裂。</p>
+<p>后来DDL之后看到有人用transformer线上竟然达到了41分（气煞我也）难道是我们的使用方式不对么？</p>
+<blockquote>
+<p>大佬们的tricks</p>
+</blockquote>
+<p>赛后看群消息，有大佬对时间空间数据分别做训练（这个我是没听懂，小管回头补充一下）。我们神经网络的模型好像就没有集成了。</p>
+<p>时序数据的交叉验证也没有做（K-fold确实不可取，因为会因为数据泄露问题造成时间穿越），但是后来适用于时序数据的交叉验证（timeseriessplit)、rolling origin也全都没有尝试，时间还是太紧张了。所以回到开篇，A榜的时间没有好好利用起来，所以损失了大量的五次机会。</p>
+<p>pytorch的框架也要多用用熟悉一下才行（为毕设服务！）</p>
+<p>革命尚未成功，同志仍需努力！要有打不死的小强精神！</p>
+<p>“我是不会输的哦。”</p>
+<blockquote>
+<p>数据预处理部分</p>
+</blockquote>
+<p>个人觉得数据的预处理部分还是十分重要，打比赛还是得先分析我们所获得的数据，根据数据的实际情况再进行下一步的建模（我看群里有人专门分析了世界地区的不同区域的气象情况，还考虑了针对不同区域分别进行建模）。这次的数据预处理部分也是直接使用的baseline，后面自己再有想法去改造自己的数据预处理部分也来不及了。所以有时间最好还是自己从头实现。 另外，群内的说41分使用Transformer结构的，据说是对空间和时间分别使用Transformer结构，可能也就是两种Transformer的叠加。</p>
+<blockquote>
+<p>时间分配的问题</p>
+</blockquote>
+<p>我们大部分时间都在尝试不同的模型架构，也就是尝试通过模型来提升分数。我感觉从这一次经验中得到的教训就是，我们在瞎尝试模型，并且没有方法验证它的正确性。最终感受下来，一个比赛正确的打法应该有几点。</p>
+<ul>
+<li>先对比赛赛题进行充分的调研，先调查类似比赛的Top解决方案或最新的（并且较好的）论文文献，先看看他们的解决思路，再对赛题下手。</li>
+<li>合理的对数据进行预处理/后处理。先分析数据本身的特性，充分利用好给的数据。</li>
+<li>先选取合理的线下验证方案，再去尝试不同的模型（不然根本不知道模型的好坏）。</li>
+<li>利用好线下的每次提交机会，保持良好的代码习惯，记录每次模型的修改/运行记录，保存每次模型的得分结果，合理的控制变量去调整模型架构/数据预处理部分。一定要整理好，不然会太乱。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  <div>
+      
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/04/%E6%AF%8F%E6%97%A5%E6%91%98%E5%BD%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -447,20 +573,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -508,13 +634,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">مُجمل عدد الحروف：</span>
-    <span title="مُجمل عدد الحروف">1k</span>
+    <span title="مُجمل عدد الحروف">3k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">مُجمل زمن القراءة &asymp;</span>
-    <span title="مُجمل زمن القراءة">1 دقائق.</span>
+    <span title="مُجمل زمن القراءة">3 دقائق.</span>
 </div>
   <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
   </div>
