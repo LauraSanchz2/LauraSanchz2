@@ -173,6 +173,124 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/08/Attention%E5%8F%AF%E8%A7%86%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cat.png">
+      <meta itemprop="name" content="Laura Sanchz">
+      <meta itemprop="description" content="跳一跳，够得到。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Laura's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/08/Attention%E5%8F%AF%E8%A7%86%E5%8C%96/" class="post-title-link" itemprop="url">Attention visualization</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建于：2021-05-08 09:38:45 / 更新于：11:22:38" itemprop="dateCreated datePublished" datetime="2021-05-08T09:38:45+08:00">2021-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/%E5%8F%AF%E8%A7%86%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">可视化</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="عدد الحروف في المقال">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">عدد الحروف في المقال：</span>
+              <span>560</span>
+            </span>
+            <span class="post-meta-item" title="زمن القراءة">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">زمن القراءة &asymp;</span>
+              <span>1 دقائق.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="可交互的Attention可视化工具（Transformer可解释性）"><a href="#可交互的Attention可视化工具（Transformer可解释性）" class="headerlink" title="可交互的Attention可视化工具（Transformer可解释性）"></a>可交互的Attention可视化工具（Transformer可解释性）</h1><p><img src="https://mmbiz.qpic.cn/mmbiz_png/5fknb41ib9qFLWnPvDEgVfwuLAWGFcUQicr92fXDQOnmKonwQW6aBRQO4mfd6GudvkaiaMFWuugiazh3Pzh7qgAhNQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<blockquote>
+<h2 id="可视化的作用"><a href="#可视化的作用" class="headerlink" title="可视化的作用"></a>可视化的作用</h2></blockquote>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/5fknb41ib9qFLWnPvDEgVfwuLAWGFcUQicIrWKaFCQXrnSIUcGUWBIVia1ribFw9vLia7VFD8BRWvmsGIwZlRq7lZDQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>上述可视化方法可以让我们清晰的知道每一层的每一个Cell关注何种信息，模型最后是如何逐层迭代处理得到最后的判断。</p>
+<p>但是对<strong>NLP而言，文字并不容易转换成这样直观的视觉表示</strong>。</p>
+<p>对<u><strong>Transformer而言，理解注意力机制是最为关键的一步</strong></u>。比较常见的一种注意力可视化是用灰度图表示不同token之间的注意力权重： </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/5fknb41ib9qFLWnPvDEgVfwuLAWGFcUQicl1DQuUvDQVeV7ol8uHYItrmKTWDhL708CtyBSN4YG6lJ4UKpOMyWibA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<blockquote>
+<h2 id="上述可视化方式的缺点："><a href="#上述可视化方式的缺点：" class="headerlink" title="上述可视化方式的缺点："></a>上述可视化方式的<strong>缺点</strong>：</h2></blockquote>
+<p>每张图只能表示一个attention head,很难获取一个更直接的全局感受。</p>
+<blockquote>
+<p>一款可交互的Attention可视化工具</p>
+</blockquote>
+<p> 乔治亚理工最近提出了<u><strong>DODRIO</strong></u>，一种可交互的Attention可视化工具，从<strong>句法</strong>和<strong>语义</strong>层面总结了不同注意力头的信息。对于<strong>Transformer的可解释性</strong>具有较大的帮助。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_gif/5fknb41ib9qFLWnPvDEgVfwuLAWGFcUQicjzNh3Miakl45r7MYicAticwqr7lY2Rzw2AEVCIicsaq4CtmUhPPA57OLEw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1"></p>
+<blockquote>
+<p>Demo地址</p>
+</blockquote>
+<p> <em><a target="_blank" rel="noopener" href="https://poloclub.github.io/dodrio/">https://poloclub.github.io/dodrio/</a></em> </p>
+<blockquote>
+<p>论文地址</p>
+</blockquote>
+<p> <em>DODRIO: Exploring Transformer Models with Interactive Visualization</em> </p>
+<p> <em><a target="_blank" rel="noopener" href="http://arxiv-download.xixiaoyao.cn/pdf/2103.14625.pdf">http://arxiv-download.xixiaoyao.cn/pdf/2103.14625.pdf</a></em> </p>
+<blockquote>
+<p>工具的具体介绍</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/S5Ybvqtm8B78UG9WoKaPPQ">https://mp.weixin.qq.com/s/S5Ybvqtm8B78UG9WoKaPPQ</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  <div>
+      
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/12/AI-Earth-%E6%97%B6%E5%BA%8F%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -275,6 +393,160 @@
 <li>合理的对数据进行预处理/后处理。先分析数据本身的特性，充分利用好给的数据。</li>
 <li>先选取合理的线下验证方案，再去尝试不同的模型（不然根本不知道模型的好坏）。</li>
 <li>利用好线下的每次提交机会，保持良好的代码习惯，记录每次模型的修改/运行记录，保存每次模型的得分结果，合理的控制变量去调整模型架构/数据预处理部分。一定要整理好，不然会太乱。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  <div>
+      
+  </div>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/27/%E6%AF%8F%E6%97%A5%E6%91%98%E5%BD%95-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cat.png">
+      <meta itemprop="name" content="Laura Sanchz">
+      <meta itemprop="description" content="跳一跳，够得到。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Laura's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/02/27/%E6%AF%8F%E6%97%A5%E6%91%98%E5%BD%95-1/" class="post-title-link" itemprop="url">每日摘录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建于：2021-02-27 14:17:31" itemprop="dateCreated datePublished" datetime="2021-02-27T14:17:31+08:00">2021-02-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">عُدل في</span>
+                <time title="更新于：2021-05-08 11:16:47" itemprop="dateModified" datetime="2021-05-08T11:16:47+08:00">2021-05-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">生活记录</span></a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/%E8%87%AA%E6%88%91%E6%8F%90%E5%8D%87/" itemprop="url" rel="index"><span itemprop="name">自我提升</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="عدد الحروف في المقال">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">عدد الحروف في المقال：</span>
+              <span>748</span>
+            </span>
+            <span class="post-meta-item" title="زمن القراءة">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">زمن القراءة &asymp;</span>
+              <span>1 دقائق.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="《不要总是仰望别人》"><a href="#《不要总是仰望别人》" class="headerlink" title="《不要总是仰望别人》"></a>《不要总是仰望别人》</h1><blockquote>
+<p>十八件提升幸福感的小事</p>
+</blockquote>
+<ul>
+<li><p><strong>保证充足的睡眠</strong></p>
+<p>睡眠才是治愈一切烦恼的最佳捷径。早睡早起，适当午睡，才有更充沛的经历面对人生万难。</p>
+</li>
+<li><p><strong>养成运动的习惯</strong></p>
+<p>坚持运动，跑步、瑜伽、健身等，久而久之，你会遇见一个崭新的自己。</p>
+</li>
+<li><p><strong>保持有效持续的输入</strong></p>
+<p>看一部高品质电影，阅读一本好书，精读paper做好读书笔记，持续有效地给大脑充电，才能继续往前奔跑。</p>
+</li>
+<li><p><strong>减少无效社交</strong>（<strong>刷朋友圈的时间</strong>）</p>
+<p>很多社交都是无效的，别人的动态与自己无关。</p>
+</li>
+<li><p><strong>每周整理一次房间</strong></p>
+<p>周末时打扫卫生，心情也会变好哦！</p>
+</li>
+<li><p><strong>每月整理一次生活</strong></p>
+<p>该扔的东西扔，消耗自身的关系要断，不必要的欲望要舍。舍弃“不需要、不合适、不舒服”，才能拥有真正的自在。</p>
+</li>
+<li><p><strong>不要被糟糕的情绪左右</strong></p>
+<p>不对亲近的人发脾气，不任由自己的心情做事，能控制好情绪，才能掌控好人生。</p>
+</li>
+<li><p><strong>找到适合自己的减压方法</strong></p>
+<p>适当让自己喘息片刻，才有勇气直面高压。</p>
+</li>
+<li><p><strong>偶尔留出私人空间</strong></p>
+<p>给自己腾出一个私人空间，在独立空间里享受自由，享受独处的静谧。</p>
+</li>
+<li><p><strong>对着镜子夸赞自己</strong></p>
+<p>晨起经常对着镜子里的自己笑一笑，给新的一天加油打气，重拾自信。</p>
+</li>
+<li><p><strong>不要顾忌他人的眼光</strong></p>
+<p>为自己而活，倾听自己内心的声音。不要过分在意别人的眼光。</p>
+</li>
+<li><p><strong>向他人伸出援手</strong></p>
+<p>人生中所有的惊喜和好运，都是你日积月累的人品和善良。</p>
+</li>
+<li><p><strong>不盲目比较</strong></p>
+<p>不要总是无限放大别人的有点，也应适时想想自己的长处。要懂得自我欣赏。</p>
+</li>
+<li><p><strong>做自己想做的事</strong></p>
+<p>我们三分之一的时间都在工作。如果暂时不能实现，那么先培养一个兴趣爱好。</p>
+</li>
+<li><p><strong>去充满烟火气的地方走走</strong></p>
+<p>生活本该有滋有味，去菜市场、小吃街、广场等地散散步，感受真实存在的人间。</p>
+</li>
+<li><p><strong>不要盲目消费</strong></p>
+<p>虚荣、攀比是人性永远的弱点。购物时记得保持清醒理智，买自己需要的，买适合自己的。</p>
+</li>
+<li><p><strong>睡前总结</strong></p>
+<p>清楚知道自己每天做了什么，不要虚掷光阴。</p>
+</li>
+<li><p><strong>向亲人或朋友倾诉</strong></p>
+<p>不要把所有压力都藏在心里，试着敞开心扉，收获家人和朋友的关心。</p>
+</li>
 </ul>
 
       
@@ -573,20 +845,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -634,13 +906,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">مُجمل عدد الحروف：</span>
-    <span title="مُجمل عدد الحروف">3k</span>
+    <span title="مُجمل عدد الحروف">4k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">مُجمل زمن القراءة &asymp;</span>
-    <span title="مُجمل زمن القراءة">3 دقائق.</span>
+    <span title="مُجمل زمن القراءة">4 دقائق.</span>
 </div>
   <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
   </div>
