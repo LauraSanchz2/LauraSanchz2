@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Deep Learning 调参tricks[TOC] https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;mSQUlEAo8HgwnZL-5B5Oqw 1. 学习率（Learning Rate)学习率是一个非常非常重要的超参数，这个参数，面对不同规模、不同batch-size、不同优化方式、不同数据集，其最合适的值都是不确定的，我们无法光凭经验来准确地确定lr的值，我们唯一可以做的，就是在训练">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DL调参tricks">
+<meta property="og:url" content="http://example.com/2021/05/17/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E6%8A%80%E5%B7%A7/index.html">
+<meta property="og:site_name" content="Laura&#39;s Blog">
+<meta property="og:description" content="Deep Learning 调参tricks[TOC] https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;mSQUlEAo8HgwnZL-5B5Oqw 1. 学习率（Learning Rate)学习率是一个非常非常重要的超参数，这个参数，面对不同规模、不同batch-size、不同优化方式、不同数据集，其最合适的值都是不确定的，我们无法光凭经验来准确地确定lr的值，我们唯一可以做的，就是在训练">
+<meta property="og:locale">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IrJN06J2N8nQecjwxuso2icgkvaiaK0ThbQcXicCMXcrEjerJvctIJ12rg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IbOOqVBQx6WFUrGx3ImosNSlibttTryAfEcxR6iaiaptocK7iavjGQhbkoA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IvTibeYqyBqS12HRCNyKv3CQV7ukg6oicBm8VIKUPYibIJibj6Ro3oiaH4tw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IZx55Jox0OFxCubum5tmF4jibJviamCLBaqxNvb18C0u33JHafUicbPYDQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IyXHYxtpJeK2fRjB2Ev5DameXP09Qlx5icE9ur15ktmLciafdqJicxpEpw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IAyHpXYUgLnQh0pkvwXVt91zFAWpOq16ocIAVBG2y2DuMiaI5vHqZ9Fg/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2I2BREtPabBmQ2PjOAr3Uho3Osjy5XYcxJqG8DiaJyOjibAasaYaTd8FAg/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="article:published_time" content="2021-05-17T03:11:19.463Z">
+<meta property="article:modified_time" content="2021-05-17T08:12:22.414Z">
+<meta property="article:author" content="Laura Sanchz">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="调参">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_png/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IrJN06J2N8nQecjwxuso2icgkvaiaK0ThbQcXicCMXcrEjerJvctIJ12rg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+
+<link rel="canonical" href="http://example.com/2021/05/17/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E6%8A%80%E5%B7%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>DL调参tricks | Laura's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Laura's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叮咚！被你发现一枚宝藏女孩！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/17/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E6%8A%80%E5%B7%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cat.png">
+      <meta itemprop="name" content="Laura Sanchz">
+      <meta itemprop="description" content="跳一跳，够得到。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Laura's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DL调参tricks
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建于：2021-05-17 11:11:19 / 更新于：16:12:22" itemprop="dateCreated datePublished" datetime="2021-05-17T11:11:19+08:00">2021-05-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E8%B0%83%E5%8F%82%E6%8A%80%E5%B7%A7/" itemprop="url" rel="index"><span itemprop="name">调参技巧</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Aufrufe" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Aufrufe：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbole im Artikel gezählt">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbole im Artikel gezählt：</span>
+              <span>5.2k</span>
+            </span>
+            <span class="post-meta-item" title="Lesezeit">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Lesezeit &asymp;</span>
+              <span>5 minuten.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Deep-Learning-调参tricks"><a href="#Deep-Learning-调参tricks" class="headerlink" title="Deep Learning 调参tricks"></a>Deep Learning 调参tricks</h2><p>[TOC]</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/mSQUlEAo8HgwnZL-5B5Oqw">https://mp.weixin.qq.com/s/mSQUlEAo8HgwnZL-5B5Oqw</a></p>
+<h3 id="1-学习率（Learning-Rate"><a href="#1-学习率（Learning-Rate" class="headerlink" title="1. 学习率（Learning Rate)"></a>1. 学习率（Learning Rate)</h3><p>学习率是一个非常非常重要的超参数，这个参数，面对<u>不同规模、不同batch-size、不同优化方式、不同数据集</u>，其最合适的值都是不确定的，我们无法光凭经验来准确地确定<code>lr</code>的值，我们唯一可以做的，就是在训练中不断寻找最合适当前状态的学习率。</p>
+<p><u><strong>合适的学习率</strong>可以加快<strong>收敛速度</strong>。</u></p>
+<p>比如下图利用fastai中的**<u>lr_find()</u><strong>函数寻找合适的学习率，根据下方的</strong>学习率-损失曲线**得到此时合适的学习率为<code>1e-2</code>。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IrJN06J2N8nQecjwxuso2icgkvaiaK0ThbQcXicCMXcrEjerJvctIJ12rg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h4 id="1-1-学习率（LR-与batch-size的关系"><a href="#1-1-学习率（LR-与batch-size的关系" class="headerlink" title="1.1 学习率（LR)与batch-size的关系"></a>1.1 学习率（LR)与batch-size的关系</h4><ul>
+<li>一般来说，<strong>越大的batch-size使用越大的学习率。</strong><ul>
+<li>原理很简单，<strong>越大的<code>batch-size</code>意味着我们学习的时候，收敛方向的<code>confidence</code>越大，我们前进的方向更加坚定</strong>；</li>
+<li>而<strong>小的<code>batch-size</code>则显得比较杂乱，毫无规律性</strong>，因为相比批次大的时候，批次小的情况下无法照顾到更多的情况，所以<strong>需要小的学习率来保证不至于出错</strong>。</li>
+</ul>
+</li>
+<li>可以看下图<code>损失Loss</code>与<code>学习率Lr</code>的关系：</li>
+</ul>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IbOOqVBQx6WFUrGx3ImosNSlibttTryAfEcxR6iaiaptocK7iavjGQhbkoA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>在<strong>显存足够的条件下</strong>，最好采<strong>用较大的batch-size进行训练</strong>，找到<u>合适的学习率后，可以加快收敛速度</u>。</p>
+<p>另外，较大的batch-size可以避免batch normalization出现的一些小问题，参考如下Pytorch库Issue[3]</p>
+<h3 id="2-权重初始化"><a href="#2-权重初始化" class="headerlink" title="2. 权重初始化"></a>2. 权重初始化</h3><ul>
+<li>相较于其他trick来说使用的不是很频繁。<strong>大多数人使用的是pretrain model， 使用的权重都是在大型数据集上训练好的模型，当然不需要自己去初始化权重了</strong>。</li>
+<li>只有没有预训练模型的领域会<u><em>自己初始化权重</em></u>，或者在模型中去<u><em>初始化神经网络最后那几个全连接层的权重</em></u>。</li>
+<li>  常用的权重初始化算法是<strong>「kaiming_normal」</strong>或者<strong>「xavier_normal」</strong>。 </li>
+</ul>
+<h3 id="3-Dropout"><a href="#3-Dropout" class="headerlink" title="3. Dropout"></a>3. Dropout</h3><p> 指在深度学习网络的训练过程中，对于神经网络单元，<strong>按照一定的概率</strong>将其暂时从网络中丢弃。注意是<strong>「暂时」</strong>，对于随机梯度下降来说，由于是随机丢弃，故而每一个mini-batch都在训练不同的网络。 </p>
+<p> Dropout类似于<u>bagging ensemble</u>减少variance。也就是投通过投票来减少可变性。通常我们在全连接层部分使用dropout，在卷积层则不使用。但<strong>「dropout」</strong>并不适合所有的情况，不要无脑上<code>Dropout</code>。 </p>
+<p> <code>Dropout</code>一般适合于<strong>全连接层部分</strong>，而<u>卷积层由于其参数并不是很多</u>，所以不需要dropout，加上的话对模型的泛化能力并没有太大的影响。 </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IvTibeYqyBqS12HRCNyKv3CQV7ukg6oicBm8VIKUPYibIJibj6Ro3oiaH4tw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p> 一般在网络的<strong>最开始</strong>和<strong>结束</strong>的时候使用<strong>全连接层</strong>，而<strong>hidden layers</strong>则是网络中的<strong>卷积层</strong>。</p>
+<p>所以一般情况，在<u>全连接层部分采用较大概率的dropout</u>而在<u>卷积层采用低概率或者不采用dropout。</u> </p>
+<h3 id="4-数据集处理"><a href="#4-数据集处理" class="headerlink" title="4. 数据集处理"></a>4. 数据集处理</h3><p>主要有<strong>【数据筛选】</strong>和<strong>【数据增强</strong>】这两种。</p>
+<h4 id="难例挖掘（hard-negative-mining"><a href="#难例挖掘（hard-negative-mining" class="headerlink" title="难例挖掘（hard -negative-mining)"></a>难例挖掘（hard -negative-mining)</h4><h3 id="5-多模型融合-probs融合-投票法"><a href="#5-多模型融合-probs融合-投票法" class="headerlink" title="5. 多模型融合(probs融合/投票法)"></a>5. 多模型融合(probs融合/投票法)</h3><p> Ensemble是论文刷结果的终极核武器,深度学习中一般有以下几种方式 ：</p>
+<ul>
+<li><strong>同样的参数</strong>,不同的初始化方式</li>
+<li><strong>不同的参数</strong>,通过cross-validation,选取最好的几组</li>
+<li>同样的参数,模型训练的<strong>不同阶段</strong>，即不同迭代次数的模型。</li>
+<li>**不同的模型,**进行线性融合. 例如RNN和传统模型.</li>
+</ul>
+<p><u>提高模型性能和鲁棒性大法：<strong>probs融合</strong> 和 <strong>投票法</strong>。</u></p>
+<p>假设有三个模型model1 ,model2,model3,可以这样融合：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. model1 probs + model2 probs + model3 probs ==&gt; final label</span><br><span class="line">2. model1 label , model2 label , model3 label ==&gt; voting ==&gt; final label</span><br><span class="line">3. model1_1 probs + ... + model1_n probs ==&gt; mode1 label, model2 label与model3获取的label方式与1相同  ==&gt; voting ==&gt; final label</span><br></pre></td></tr></table></figure>
+<p> 第三个方式的启发来源于，如果一个model的<strong>随机种子没有固定</strong>，多次预测得到的结果可能不同。 </p>
+<p> 以上方式的效果要根据<strong>label个数，数据集规模</strong>等特征具体问题具体分析，表现可能不同，方式无非是probs融合和投票法的单独使用or结合。</p>
+<h3 id="6-差分学习率与迁移学习"><a href="#6-差分学习率与迁移学习" class="headerlink" title="6. 差分学习率与迁移学习"></a>6. 差分学习率与迁移学习</h3><h4 id="6-1-迁移学习"><a href="#6-1-迁移学习" class="headerlink" title="6.1 迁移学习"></a>6.1 迁移学习</h4><p> 首先说下迁移学习，迁移学习是一种很常见的深度学习技巧，我们利用<strong>很多预训练的经典模型</strong>直接去训练我们自己的任务。虽然说领域不同，但是在学习权重的广度方面，两个任务之间还是有联系的。 </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IZx55Jox0OFxCubum5tmF4jibJviamCLBaqxNvb18C0u33JHafUicbPYDQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p> 由上图，我们拿来<strong>「model A」</strong>训练好的模型权重去训练我们自己的模型权重(<strong>「Model B」</strong>)，其中，modelA可能是ImageNet的预训练权重，而ModelB则是我们自己想要用来识别猫和狗的预训练权重。 </p>
+<h4 id="6-2-差分学习率与迁移学习的关系"><a href="#6-2-差分学习率与迁移学习的关系" class="headerlink" title="6.2 差分学习率与迁移学习的关系"></a>6.2 差分学习率与迁移学习的关系</h4><ul>
+<li> 我们直接拿来其他任务的训练权重，在进行optimize的时候，如何选择适当的学习率是一个很重要的问题。 </li>
+<li> 一般地，我们设计的神经网络(如下图)一般分为三个部分，<strong>输入层，隐含层</strong>和<strong>输出层</strong>，随着层数的增加，神经网络学习到的特征越抽象。因此，下图中的<u>卷积层</u>和<u>全连接层</u>的学习率也应该设置的不一样，</li>
+<li>一般来说，<strong>卷积层设置的学习率应该更低一些，而全连接层的学习率可以适当提高。</strong> （全连接层的dropout应采用较大的概率，而卷积层的dropout可以概率尽可能小，甚至没有）</li>
+</ul>
+<h4 id="6-3-什么是差分学习率？"><a href="#6-3-什么是差分学习率？" class="headerlink" title="6.3 什么是差分学习率？"></a>6.3 什么是差分学习率？</h4><p><img src="https://mmbiz.qpic.cn/mmbiz/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IyXHYxtpJeK2fRjB2Ev5DameXP09Qlx5icE9ur15ktmLciafdqJicxpEpw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>差分学习率：在不同的层设置不同的学习率，可以提高神经网络的训练效果，具体的介绍可以查看下方的连接。 <img src="https://mmbiz.qpic.cn/mmbiz/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2IAyHpXYUgLnQh0pkvwXVt91zFAWpOq16ocIAVBG2y2DuMiaI5vHqZ9Fg/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>(<strong>全连接层</strong>设置较大的学习率，<strong>卷积层</strong>设置相对较小的学习率)</p>
+<h3 id="7-余弦退火-cosine-annealing-和热重启的随机梯度下降"><a href="#7-余弦退火-cosine-annealing-和热重启的随机梯度下降" class="headerlink" title="7. 余弦退火(cosine annealing)和热重启的随机梯度下降"></a>7. <u>余弦退火</u>(cosine annealing)和<u>热重启</u>的随机梯度下降</h3><ul>
+<li><p> <strong>「余弦」</strong>就是类似于余弦函数的曲线，<strong>「退火」</strong>就是下降，<strong>「余弦退火」</strong>就是学习率类似余弦函数慢慢下降。 </p>
+</li>
+<li><p> <strong>「热重启」</strong>就是在学习的过程中，<strong>「学习率」</strong>慢慢下降然后突然再<strong>「回弹」</strong>(重启)然后继续慢慢下降。 </p>
+</li>
+<li><p>两个结合起来就是下方的学习率变化图： </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz/DHibuUfpZvQfzTJj9E6KAqeYmeoPQKU2I2BREtPabBmQ2PjOAr3Uho3Osjy5XYcxJqG8DiaJyOjibAasaYaTd8FAg/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+</li>
+</ul>
+<h3 id="8-尝试过拟合一个小数据集"><a href="#8-尝试过拟合一个小数据集" class="headerlink" title="8. 尝试过拟合一个小数据集"></a>8. 尝试过拟合一个小数据集</h3><p>这是一个经典的小trick了，但是很多人并不这样做，可以尝试一下。</p>
+<p><strong>关闭正则化/随机失活/数据扩充，</strong>使用训练集的一小部分，让神经网络训练几个周期。确保可以实现零损失，如果没有，那么很可能什么地方出错了。</p>
+<h3 id="9-多尺度训练"><a href="#9-多尺度训练" class="headerlink" title="9.多尺度训练"></a>9.多尺度训练</h3><p>多尺度训练是一种<strong>「直接有效」</strong>的方法，通过输入不同尺度的图像数据集，因为神经网络卷积池化的特殊性，这样可以让神经网络充分地学习不同分辨率下图像的特征，可以提高机器学习的性能。</p>
+<p>也可以用来处理过拟合效应，在图像数据集不是特别充足的情况下，可以先训练小尺寸图像，然后增大尺寸并再次训练相同模型，这样的思想在Yolo-v2的论文中也提到过：</p>
+<p> 需要注意的是：多尺度训练并不是适合所有的深度学习应用，多尺度训练可以算是特殊的数据增强方法，在图像大小这一块做了调整。如果有可能最好利用可视化代码将多尺度后的图像近距离观察一下，<strong>「看看多尺度会对图像的整体信息有没有影响」</strong>，如果对图像信息有影响的话，这样直接训练的话会误导算法导致得不到应有的结果。 </p>
+<h3 id="10-交叉验证（Cross-Validation"><a href="#10-交叉验证（Cross-Validation" class="headerlink" title="10. 交叉验证（Cross Validation)"></a>10. 交叉验证（Cross Validation)</h3><ul>
+<li>在李航的统计学方法中说到，交叉验证往往是对实际应用中<strong>「数据不充足」</strong>而采用的</li>
+<li><strong>基本目的:**重复使用数据。在平常中我们将所有的数据分为训练集和验证集就已经是简单的交叉验证了，可以称为1折交叉验证。</strong>「注意，交叉验证和测试集没关系，测试集是用来衡量我们的算法标准的，不参与到交叉验证中来。」**</li>
+<li>交叉验证只针对训练集和验证集。</li>
+<li>交叉验证是Kaggle比赛中特别推崇的一种技巧，我们经常使用的<strong>是5-折(5-fold)交叉验证</strong>，将训练集分成5份，随机挑一份做验证集其余为训练集，循环5次，这种比较常见计算量也不是很大。还有一种叫做<code>leave-one-out cross validation</code>留一交叉验证，这种交叉验证就是n-折交叉，n表示数据集的容量，这种方法只适合数据量比较小的情况，计算量非常大的情况很少用到这种方法。</li>
+</ul>
+<h3 id="11-优化算法"><a href="#11-优化算法" class="headerlink" title="11. 优化算法"></a>11. 优化算法</h3><p>按理说不同的优化算法适合于不同的任务，不过我们大多数采用的优化算法还是是<strong>Adam</strong>和<strong>SGD+monmentum。</strong></p>
+<h4 id="11-1-Adam算法"><a href="#11-1-Adam算法" class="headerlink" title="11.1 Adam算法"></a>11.1 Adam算法</h4><p>Adam 可以解决一堆奇奇怪怪的问题（有时 loss 降不下去，换 Adam 瞬间就好了），也可以带来一堆奇奇怪怪的问题（比如单词词频差异很大，当前  batch 没有的单词的词向量也被更新；再比如Adam和L2正则结合产生的复杂效果）。用的时候要胆大心细，万一遇到问题找各种魔改 Adam（比如 MaskedAdam[14], AdamW 啥的）抢救。</p>
+<p>但看一些博客说adam的相比SGD，收敛快，但泛化能力差，更优结果似乎需要精调SGD。</p>
+<h3 id="12-数据预处理方式"><a href="#12-数据预处理方式" class="headerlink" title="12 数据预处理方式"></a>12 数据预处理方式</h3><p>zero-center比较常用</p>
+<h3 id="13-【-】训练技巧（炼丹师必知必会）"><a href="#13-【-】训练技巧（炼丹师必知必会）" class="headerlink" title="13. 【++】训练技巧（炼丹师必知必会）"></a>13. 【++】训练技巧（炼丹师必知必会）</h3><ul>
+<li><p>要做<strong>梯度归一化</strong>,即算出来的梯度除以minibatch size</p>
+</li>
+<li><p><strong>clip c(梯度裁剪)</strong>: 限制最大梯度,其实是value = sqrt(w1^2+w2^2….),如果value超过了阈值,就算一个衰减系系数,让value的值等于阈值: 5,10,15</p>
+</li>
+<li><p><strong>dropout</strong>对小数据防止过拟合有很好的效果,<strong>值一般设为0.5</strong></p>
+</li>
+<li><ul>
+<li>小数据上dropout+sgd在我的大部分实验中，效果提升都非常明显.因此可能的话，建议一定要尝试一下。</li>
+</ul>
+</li>
+<li><p>dropout的位置比较有讲究, 对于RNN,建议放到<strong>输入-&gt;RNN</strong>与<strong>RNN-&gt;输出的位置</strong>.关于RNN如何用dropout,可以参考这篇论文:<a target="_blank" rel="noopener" href="http://arxiv.org/abs/1409.2329[15]">http://arxiv.org/abs/1409.2329[15]</a></p>
+</li>
+<li><p>除了<strong>gate之类的地方,需要把输出限制成0-1之外</strong>,尽量不要用sigmoid,可以用<strong>tanh或者relu</strong>之类的激活函数.</p>
+</li>
+<li><ul>
+<li>sigmoid函数在-4到4的区间里，才有较大的梯度。之外的区间，梯度接近0，很容易造成梯度消失问题。</li>
+<li>输入0均值，sigmoid函数的输出不是0均值的。</li>
+</ul>
+</li>
+<li><p><strong>RNN</strong>的dim和embdding size,一般从<strong>128</strong>上下开始调整. batch size,一般从128左右开始调整. batch size合适最重要,并不是越大越好.</p>
+</li>
+<li><p><strong>word2vec初始化</strong>,在小数据上,不仅可以有效提高收敛速度,也可以可以提高结果.</p>
+</li>
+<li><p>尽量对数据做<strong>shuffle</strong></p>
+</li>
+<li><p>LSTM 的forget gate的bias,用1.<strong>0或者更大的值做初始化,可以取得更好的结果</strong>,来自这篇论文:<a target="_blank" rel="noopener" href="http://jmlr.org/proceedings/papers/v37/jozefowicz15.pdf[16]">http://jmlr.org/proceedings/papers/v37/jozefowicz15.pdf[16]</a>, 我这里实验设成1.0,可以提高收敛速度.实际使用中,不同的任务,可能需要尝试不同的值.</p>
+</li>
+<li><p><strong>Batch Normalization据说可以提升效果</strong>，参考论文：Accelerating Deep Network Training by Reducing Internal Covariate Shift</p>
+</li>
+<li><p>如果你的模型包含<strong>全连接层（MLP）</strong>，并且输入和输出大小一样，可以<strong>考虑将MLP替换成Highway  Network</strong>,我尝试对结果有一点提升，建议作为最后提升模型的手段，原理很简单，**<u>就是给输出加了一个gate来控制信息的流动</u>**，详细介绍请参考论文: <a target="_blank" rel="noopener" href="http://arxiv.org/abs/1505.00387[17]">http://arxiv.org/abs/1505.00387[17]</a></p>
+</li>
+<li><p>来自@张馨宇的技巧：<strong>一轮加正则，一轮不加正则，反复进行</strong>。</p>
+</li>
+<li><p>在数据集很大的情况下，一上来就跑全量数据。建议<strong>先用 1/100、1/10</strong> 的数据跑一跑，对模型性能和训练时间有个底，外推一下全量数据到底需要跑多久。<strong>在没有足够的信心前不做大规模实验。</strong></p>
+</li>
+<li><p><strong><u>subword</u></strong> 总是会很稳定地涨点，只管用就对了。</p>
+</li>
+<li><p><strong>GPU 上报错时尽量放在 CPU 上重跑</strong>，错误信息更友好。例如 GPU 报 “ERROR:tensorflow:Model diverged with loss = NaN” 其实很有可能是输入 ID 超出了 softmax 词表的范围。</p>
+</li>
+<li><p>在确定初始学习率的时候，从一个很小的值（例如 1e-7）开始，然后每一步指数增大学习率（例如扩大1.05 倍）进行训练。训练几百步应该能观察到损失函数随训练步数呈对勾形，选择损失下降最快那一段的学习率即可。</p>
+</li>
+<li><p>补充一个RNN trick，仍然是不考虑时间成本的情况下，batch size=1是一个很不错的regularizer, 起码在某些task上,这也有可能是很多人无法复现alex graves实验结果的原因之一，因为他总是把batch size设成1。</p>
+</li>
+<li><p>注意实验的<strong>可复现性</strong>和<strong>一致性</strong>，<strong>注意养成良好的实验记录习惯</strong> ==&gt; <strong>不然如何分析出实验结论。</strong></p>
+</li>
+<li><p>超参上，learning rate 最重要，推荐了解 <strong><u>cosine learning rate</u></strong> 和 <strong><u>cyclic learning rate</u>**，其次是 batchsize 和 weight decay。当你的模型还不错的时候，可以试着做</strong>数据增广<strong>和</strong>改损失函数**锦上添花了。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E8%B0%83%E5%8F%82/" rel="tag"><i class="fa fa-tag"></i> 调参</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/17/11%E5%A4%A7%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E6%B1%87%E6%80%BB/" rel="prev" title="炼丹么？这里是必知必会的11大神经网络结构">
+      <i class="fa fa-chevron-left"></i> 炼丹么？这里是必知必会的11大神经网络结构
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/18/Transformer%EF%BC%9A%E7%A7%91%E6%99%AE%E5%90%91/" rel="next" title="Transformer相关理解（科普向）">
+      Transformer相关理解（科普向） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  <div>
+      
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+              -------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------
+        </div>
+    
+</div>
+      
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Deep-Learning-%E8%B0%83%E5%8F%82tricks"><span class="nav-number">1.</span> <span class="nav-text">Deep Learning 调参tricks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AD%A6%E4%B9%A0%E7%8E%87%EF%BC%88Learning-Rate"><span class="nav-number">1.1.</span> <span class="nav-text">1. 学习率（Learning Rate)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E5%AD%A6%E4%B9%A0%E7%8E%87%EF%BC%88LR-%E4%B8%8Ebatch-size%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 学习率（LR)与batch-size的关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.2.</span> <span class="nav-text">2. 权重初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Dropout"><span class="nav-number">1.3.</span> <span class="nav-text">3. Dropout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%95%B0%E6%8D%AE%E9%9B%86%E5%A4%84%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">4. 数据集处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%BE%E4%BE%8B%E6%8C%96%E6%8E%98%EF%BC%88hard-negative-mining"><span class="nav-number">1.4.1.</span> <span class="nav-text">难例挖掘（hard -negative-mining)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%A4%9A%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88-probs%E8%9E%8D%E5%90%88-%E6%8A%95%E7%A5%A8%E6%B3%95"><span class="nav-number">1.5.</span> <span class="nav-text">5. 多模型融合(probs融合&#x2F;投票法)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%B7%AE%E5%88%86%E5%AD%A6%E4%B9%A0%E7%8E%87%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.6.</span> <span class="nav-text">6. 差分学习率与迁移学习</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 迁移学习</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-%E5%B7%AE%E5%88%86%E5%AD%A6%E4%B9%A0%E7%8E%87%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 差分学习率与迁移学习的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-3-%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%AE%E5%88%86%E5%AD%A6%E4%B9%A0%E7%8E%87%EF%BC%9F"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 什么是差分学习率？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E4%BD%99%E5%BC%A6%E9%80%80%E7%81%AB-cosine-annealing-%E5%92%8C%E7%83%AD%E9%87%8D%E5%90%AF%E7%9A%84%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D"><span class="nav-number">1.7.</span> <span class="nav-text">7. 余弦退火(cosine annealing)和热重启的随机梯度下降</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%B0%9D%E8%AF%95%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%80%E4%B8%AA%E5%B0%8F%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">1.8.</span> <span class="nav-text">8. 尝试过拟合一个小数据集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E5%A4%9A%E5%B0%BA%E5%BA%A6%E8%AE%AD%E7%BB%83"><span class="nav-number">1.9.</span> <span class="nav-text">9.多尺度训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81%EF%BC%88Cross-Validation"><span class="nav-number">1.10.</span> <span class="nav-text">10. 交叉验证（Cross Validation)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95"><span class="nav-number">1.11.</span> <span class="nav-text">11. 优化算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#11-1-Adam%E7%AE%97%E6%B3%95"><span class="nav-number">1.11.1.</span> <span class="nav-text">11.1 Adam算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="nav-number">1.12.</span> <span class="nav-text">12 数据预处理方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-%E3%80%90-%E3%80%91%E8%AE%AD%E7%BB%83%E6%8A%80%E5%B7%A7%EF%BC%88%E7%82%BC%E4%B8%B9%E5%B8%88%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%EF%BC%89"><span class="nav-number">1.13.</span> <span class="nav-text">13. 【++】训练技巧（炼丹师必知必会）</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Laura Sanchz"
+      src="/images/cat.png">
+  <p class="site-author-name" itemprop="name">Laura Sanchz</p>
+  <div class="site-description" itemprop="description">跳一跳，够得到。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LauraSanchz2" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;LauraSanchz2" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hualulu@seu.edu.cn" title="E-Mail → mailto:hualulu@seu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">true</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Insgesamt gezählte Symbole：</span>
+    <span title="Insgesamt gezählte Symbole">11k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Insgesamte Lesezeit &asymp;</span>
+    <span title="Insgesamte Lesezeit">10 minuten.</span>
+</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Alle Besucher">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Alle Aufrufe">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

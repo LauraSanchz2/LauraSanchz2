@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="炼丹必知必会的11种神经网络结构[TOC] 本文记录一下常见的11种常见的神经网络结构。（本文为https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;qK576OCehtDsqGRGuS-dow 一文的学习笔记） 1. Perceptron(感知机)感知机是所有神经网络的基础，主要由全连接层（full-connected layer）组成。  2. Feed-Foward Network(FNN,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="炼丹么？这里是必知必会的11大神经网络结构">
+<meta property="og:url" content="http://example.com/2021/05/17/11%E5%A4%A7%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:site_name" content="Laura&#39;s Blog">
+<meta property="og:description" content="炼丹必知必会的11种神经网络结构[TOC] 本文记录一下常见的11种常见的神经网络结构。（本文为https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;qK576OCehtDsqGRGuS-dow 一文的学习笔记） 1. Perceptron(感知机)感知机是所有神经网络的基础，主要由全连接层（full-connected layer）组成。  2. Feed-Foward Network(FNN,">
+<meta property="og:locale">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNU1OpBNJW2Idib6ffub8Hrk1Ukuz2WIlNrUiaGwXEjSuzUBU48QoAP1txA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUjcBkldybzOmYuCicW5vtsDeaCUsm1pKcSG4rGcGJHtVMu6KChaLJBgg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUyPHYMjKJrrCd3SAd5OPZqQIQfIbfqnpjMhEPIqSB5Pg7ictN4O6AqQw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUMqBGyhYanrnIBnKTBysZIWDICzKF3tUo6HUSRiaZ2ezbeRSyXIJq0aQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUDtqnJG3Zyiaj3ovoYE1u6P9zE8Kl5ibpmoM7xlaLdXZWg1gclYlF43Ew/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUpO9ugjeWSheaic3Z5vBywFyH2s6fzbHbl2TNCfJeNgTcS4H7w0iaGutg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUmgYRXwGpCSG0ECxdFTRRe9qBupJwygic49XQjkxNaVgxSY1dhW8Bc5A/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUTZcPxg05r7DV3ClmibMl6ooCJ1hIzoJ0o0BQdcoZGww2IpbUH2qJjOQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUDvRbXjeEpq7blic4DhibicLzFZQVaia2xhbibM1jMJvJBlzyhhU4dbuWktg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNU5y8nB6FJbiab1ibha8xDK8wGRgZF3mMZUbhExajg5PvbA2OQ0m3bsvSQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUreFkTktfu8icqEyyibnvOxJzlBKRgicVxibfxJS0gvMBWWxjKOOHXgSibpw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="article:published_time" content="2021-05-17T00:43:21.178Z">
+<meta property="article:modified_time" content="2021-05-17T03:09:42.967Z">
+<meta property="article:author" content="Laura Sanchz">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="神经网络结构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNU1OpBNJW2Idib6ffub8Hrk1Ukuz2WIlNrUiaGwXEjSuzUBU48QoAP1txA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+
+<link rel="canonical" href="http://example.com/2021/05/17/11%E5%A4%A7%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E6%B1%87%E6%80%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>炼丹么？这里是必知必会的11大神经网络结构 | Laura's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Laura's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叮咚！被你发现一枚宝藏女孩！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/17/11%E5%A4%A7%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E6%B1%87%E6%80%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cat.png">
+      <meta itemprop="name" content="Laura Sanchz">
+      <meta itemprop="description" content="跳一跳，够得到。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Laura's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          炼丹么？这里是必知必会的11大神经网络结构
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建于：2021-05-17 08:43:21 / 更新于：11:09:42" itemprop="dateCreated datePublished" datetime="2021-05-17T08:43:21+08:00">2021-05-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">神经网络结构</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Aufrufe" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Aufrufe：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbole im Artikel gezählt">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbole im Artikel gezählt：</span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="Lesezeit">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Lesezeit &asymp;</span>
+              <span>1 minuten.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="炼丹必知必会的11种神经网络结构"><a href="#炼丹必知必会的11种神经网络结构" class="headerlink" title="炼丹必知必会的11种神经网络结构"></a>炼丹必知必会的11种神经网络结构</h2><p>[TOC]</p>
+<p>本文记录一下常见的11种常见的神经网络结构。（本文为<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qK576OCehtDsqGRGuS-dow">https://mp.weixin.qq.com/s/qK576OCehtDsqGRGuS-dow</a> 一文的学习笔记）</p>
+<h3 id="1-Perceptron-感知机"><a href="#1-Perceptron-感知机" class="headerlink" title="1. Perceptron(感知机)"></a>1. Perceptron(感知机)</h3><p>感知机是所有神经网络的基础，主要由全连接层（full-connected layer）组成。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNU1OpBNJW2Idib6ffub8Hrk1Ukuz2WIlNrUiaGwXEjSuzUBU48QoAP1txA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h3 id="2-Feed-Foward-Network-FNN-前馈神经网络"><a href="#2-Feed-Foward-Network-FNN-前馈神经网络" class="headerlink" title="2. Feed-Foward Network(FNN,前馈神经网络)"></a>2. Feed-Foward Network(FNN,前馈神经网络)</h3><p> FNN是由Perceptron组合得到的，由<strong>输入层</strong>、<strong>隐藏层</strong>和<strong>输出层</strong>组成，其结构如下： </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUjcBkldybzOmYuCicW5vtsDeaCUsm1pKcSG4rGcGJHtVMu6KChaLJBgg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h3 id="3-Residual-Networks-ResNet"><a href="#3-Residual-Networks-ResNet" class="headerlink" title="3.Residual Networks(ResNet)"></a>3.Residual Networks(ResNet)</h3><p> 深度神经网络最大问题就是**<em>当网络深度达到一定程度时就会出现<u>梯度消失</u>的问题**</em>，导致模型训练不佳，为了缓解该问题，我们设计了残差网络。它通过一个“<strong>跳跃</strong>”层传播信息号，大大缓解了梯度消失的问题。 </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUyPHYMjKJrrCd3SAd5OPZqQIQfIbfqnpjMhEPIqSB5Pg7ictN4O6AqQw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h3 id="4-Recurrent-Neural-Network-RNN"><a href="#4-Recurrent-Neural-Network-RNN" class="headerlink" title="4. Recurrent Neural Network(RNN)"></a>4. Recurrent Neural Network(RNN)</h3><p>早期用于处理<strong>序列问题</strong>，包含循环，并<strong>在自身上进行递归</strong>，因而得名“递归”。 RNN允许将<strong>信息存储在网络中</strong>，并使用先前训练中的推理，对即将发生的事件做出更好、更明智的决策 。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUMqBGyhYanrnIBnKTBysZIWDICzKF3tUo6HUSRiaZ2ezbeRSyXIJq0aQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h3 id="5-Long-Short-Term-Memory-Network-LSTM"><a href="#5-Long-Short-Term-Memory-Network-LSTM" class="headerlink" title="5. Long Short Term Memory Network(LSTM)"></a>5. Long Short Term Memory Network(LSTM)</h3><p> RNN最大的问题在于，一旦处理的序列较长的时候，例如100，RNN的效果就会大大变差，所以大家设计了LSTM，LSTM可以处理大约<strong>300左右长度</strong>的序列，这也是为什么目前LSTM在序列化的问题中还经常被使用的原因。 </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUDtqnJG3Zyiaj3ovoYE1u6P9zE8Kl5ibpmoM7xlaLdXZWg1gclYlF43Ew/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h3 id="6-Echo-State-Networks-ESN-RNN的一种变体"><a href="#6-Echo-State-Networks-ESN-RNN的一种变体" class="headerlink" title="6. Echo State Networks(ESN),RNN的一种变体"></a>6. Echo State Networks(ESN),RNN的一种变体</h3><ul>
+<li><p> 回声状态网络由<strong>输入层、隐藏层</strong>(即储备池)、<strong>输出层</strong>组成，是递归神经网络的一种变体，它有一个<u>非常稀疏连接的隐层（通常是百分之一左右的连通性）</u>。</p>
+</li>
+<li><p>神经元的<strong>连接</strong>和<strong>权值</strong>是随机分配的，忽略层和神经元的差异（跳跃连接）。</p>
+</li>
+<li><p>ESN将隐藏层设计成一个具有<strong>很多神经元组成的稀疏网络</strong>，通过调整网络内部权值的特性达到记忆数据的功能。 </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUpO9ugjeWSheaic3Z5vBywFyH2s6fzbHbl2TNCfJeNgTcS4H7w0iaGutg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+</li>
+</ul>
+<h3 id="7-Convolutional-Neural-Network-CNN"><a href="#7-Convolutional-Neural-Network-CNN" class="headerlink" title="7. Convolutional Neural Network(CNN)"></a>7. Convolutional Neural Network(CNN)</h3><ul>
+<li> 因为图像数据有着<strong>非常高的维度</strong>，训练一个标准网络训练图像（例如简单的MLP）都需要<strong>数十万个</strong>输入神经元，除了明显的高计算开销外，还会导致许多与神经网络<strong>维数灾难相关的问题</strong>。</li>
+<li>CNN则利用卷积层来帮助降低图像的维数，不仅大大降低了训练的参数，而且在效果上也取得了巨大的提升。 </li>
+</ul>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUmgYRXwGpCSG0ECxdFTRRe9qBupJwygic49XQjkxNaVgxSY1dhW8Bc5A/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h3 id="8-Deconvolutional-Neural-Network-DNN-反卷积神经网络"><a href="#8-Deconvolutional-Neural-Network-DNN-反卷积神经网络" class="headerlink" title="8.  Deconvolutional Neural Network (DNN) 反卷积神经网络"></a>8.  Deconvolutional Neural Network (DNN) 反卷积神经网络</h3><ul>
+<li><p> 反卷积神经网络，顾名思义，其<strong>性能与卷积神经网络相反</strong>。</p>
+</li>
+<li><p>DNN并不是通过卷积来降低来图像的维数，而是<strong>利用反卷积来创建图像</strong>，一般是<strong>从噪声中生成</strong>的。</p>
+</li>
+<li><p>DNN还经常<strong>用于寻找丢失的特征或信号</strong>，这些<u>特征或信号</u>以前可能被认为对卷积神经网络的任务并不重要。一个信号可能由于与其他信号卷积而丢失。信号的Deconvolution可以用于<strong>图像合成</strong>和<strong>分析</strong>。 </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_gif/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUTZcPxg05r7DV3ClmibMl6ooCJ1hIzoJ0o0BQdcoZGww2IpbUH2qJjOQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1"></p>
+</li>
+</ul>
+<h3 id="9-Generative-Adversarial-Network-GAN-生成对抗网络"><a href="#9-Generative-Adversarial-Network-GAN-生成对抗网络" class="headerlink" title="9. Generative Adversarial Network(GAN)生成对抗网络"></a>9. Generative Adversarial Network(GAN)生成对抗网络</h3><ul>
+<li> 生成性对抗网络是一种专门设计用来<strong>生成图像</strong>的网络，它由两个网络组成：一个<strong>生成器</strong>和一个<strong>判别器</strong>。</li>
+<li><strong>判别器的任务</strong>是区分图像是从数据集中提取的还是由生成器生成的，</li>
+<li><strong>生成器的任务</strong>是生成虚假的图像，尽可能使得判别器无法区分图像是否真实，目前GAN生成的图像很多都是栩栩如生，甚至达到了以假乱真的程度。 </li>
+</ul>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUDvRbXjeEpq7blic4DhibicLzFZQVaia2xhbibM1jMJvJBlzyhhU4dbuWktg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h3 id="10-Auto-Encoder-AE"><a href="#10-Auto-Encoder-AE" class="headerlink" title="10. Auto Encoder(AE)"></a>10. Auto Encoder(AE)</h3><ul>
+<li> 应用场景：自动编码器的应用非常广，包括<strong>模型压缩</strong>、<strong>数据去噪</strong>、<strong>异常检测</strong>、<strong>推荐系统</strong>等等。</li>
+<li>基本思想：<strong>原始的高维数据“压缩”、低维的数据</strong>，然后将<u>压缩后的数据投影到一个新的空间</u>中。 </li>
+</ul>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNU5y8nB6FJbiab1ibha8xDK8wGRgZF3mMZUbhExajg5PvbA2OQ0m3bsvSQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<h3 id="11-Variational-Auto-Encoder-VAE"><a href="#11-Variational-Auto-Encoder-VAE" class="headerlink" title="11. Variational Auto Encoder(VAE)"></a>11. Variational Auto Encoder(VAE)</h3><ul>
+<li>AE vs DAE: 自动编码器学习<strong>输入的压缩表示</strong>，而变分自动编码器（VAE）学习<strong>表示数据的概率分布</strong>的参数。</li>
+<li>它不只是学习表示数据的函数，而是获得<strong>更详细和细致的数据视图</strong>，从<strong>分布中采样并生成新的输入数据样本</strong>。</li>
+<li>VAE更像是一个<strong>“生成”模式</strong>，类似于<strong>GAN</strong>。 </li>
+</ul>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/CuZzSF5jYZype6ReoJuEEF7BuMOAyqNUreFkTktfu8icqEyyibnvOxJzlBKRgicVxibfxJS0gvMBWWxjKOOHXgSibpw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i> 神经网络结构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/08/Attention%E5%8F%AF%E8%A7%86%E5%8C%96/" rel="prev" title="Attention visualization">
+      <i class="fa fa-chevron-left"></i> Attention visualization
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/17/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E6%8A%80%E5%B7%A7/" rel="next" title="DL调参tricks">
+      DL调参tricks <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  <div>
+      
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+              -------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------
+        </div>
+    
+</div>
+      
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%82%BC%E4%B8%B9%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E7%9A%8411%E7%A7%8D%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">炼丹必知必会的11种神经网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Perceptron-%E6%84%9F%E7%9F%A5%E6%9C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">1. Perceptron(感知机)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Feed-Foward-Network-FNN-%E5%89%8D%E9%A6%88%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">1.2.</span> <span class="nav-text">2. Feed-Foward Network(FNN,前馈神经网络)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Residual-Networks-ResNet"><span class="nav-number">1.3.</span> <span class="nav-text">3.Residual Networks(ResNet)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Recurrent-Neural-Network-RNN"><span class="nav-number">1.4.</span> <span class="nav-text">4. Recurrent Neural Network(RNN)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Long-Short-Term-Memory-Network-LSTM"><span class="nav-number">1.5.</span> <span class="nav-text">5. Long Short Term Memory Network(LSTM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Echo-State-Networks-ESN-RNN%E7%9A%84%E4%B8%80%E7%A7%8D%E5%8F%98%E4%BD%93"><span class="nav-number">1.6.</span> <span class="nav-text">6. Echo State Networks(ESN),RNN的一种变体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Convolutional-Neural-Network-CNN"><span class="nav-number">1.7.</span> <span class="nav-text">7. Convolutional Neural Network(CNN)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-Deconvolutional-Neural-Network-DNN-%E5%8F%8D%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">1.8.</span> <span class="nav-text">8.  Deconvolutional Neural Network (DNN) 反卷积神经网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-Generative-Adversarial-Network-GAN-%E7%94%9F%E6%88%90%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9C"><span class="nav-number">1.9.</span> <span class="nav-text">9. Generative Adversarial Network(GAN)生成对抗网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-Auto-Encoder-AE"><span class="nav-number">1.10.</span> <span class="nav-text">10. Auto Encoder(AE)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-Variational-Auto-Encoder-VAE"><span class="nav-number">1.11.</span> <span class="nav-text">11. Variational Auto Encoder(VAE)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Laura Sanchz"
+      src="/images/cat.png">
+  <p class="site-author-name" itemprop="name">Laura Sanchz</p>
+  <div class="site-description" itemprop="description">跳一跳，够得到。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LauraSanchz2" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;LauraSanchz2" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hualulu@seu.edu.cn" title="E-Mail → mailto:hualulu@seu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">true</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Insgesamt gezählte Symbole：</span>
+    <span title="Insgesamt gezählte Symbole">11k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Insgesamte Lesezeit &asymp;</span>
+    <span title="Insgesamte Lesezeit">10 minuten.</span>
+</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Alle Besucher">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Alle Aufrufe">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
