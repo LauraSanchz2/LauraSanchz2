@@ -20,21 +20,23 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="时序比赛赛后总结 关于时间线的问题  A榜2月初打开，到3月24日截至。其实真正投入的时间也就是两周不到的时间，非常仓促。A榜每日五次被浪费掉的机会在我们最后一周焦灼尝试时十分懊悔。之后如果再参加比赛的话，一定会控制好时间线进行合理安排与模型框架的尝试，避免出现这次这种时间不够用、模型不够试的情况。附上比赛官网（我怕后面连赛题任务都记不得了hh) https:&#x2F;&#x2F;tianchi.aliyun.co">
+  <meta name="description" content="原文链接：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;369446355 [TOC] 导语Twitter图机器学习大牛Michael Bronstein发表了一篇长达160页的论文，试图从对称性和不变性的视角从几何上统一CNNs、GNNs、LSTMs、Transformers等典型架构。  相关论文：https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2104.13478.pdf  爱尔兰根">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AI-Earth-天池时序比赛总结">
-<meta property="og:url" content="http://example.com/2021/04/12/AI-Earth-%E6%97%B6%E5%BA%8F%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:title" content="Twitter 图机器学习大牛发表160页论文：以几何学视角统一深度学习">
+<meta property="og:url" content="http://example.com/2021/05/24/%E4%BB%A5%E5%87%A0%E4%BD%95%E5%AD%A6%E8%A7%86%E8%A7%92%E7%BB%9F%E4%B8%80%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="Laura&#39;s Blog">
-<meta property="og:description" content="时序比赛赛后总结 关于时间线的问题  A榜2月初打开，到3月24日截至。其实真正投入的时间也就是两周不到的时间，非常仓促。A榜每日五次被浪费掉的机会在我们最后一周焦灼尝试时十分懊悔。之后如果再参加比赛的话，一定会控制好时间线进行合理安排与模型框架的尝试，避免出现这次这种时间不够用、模型不够试的情况。附上比赛官网（我怕后面连赛题任务都记不得了hh) https:&#x2F;&#x2F;tianchi.aliyun.co">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;369446355 [TOC] 导语Twitter图机器学习大牛Michael Bronstein发表了一篇长达160页的论文，试图从对称性和不变性的视角从几何上统一CNNs、GNNs、LSTMs、Transformers等典型架构。  相关论文：https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2104.13478.pdf  爱尔兰根">
 <meta property="og:locale">
-<meta property="article:published_time" content="2021-04-12T12:05:41.741Z">
-<meta property="article:modified_time" content="2021-04-12T13:28:33.047Z">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-0c7d6bc4090e3ee2cd1b7d6dc98141b9_720w.jpg">
+<meta property="article:published_time" content="2021-05-24T13:10:28.069Z">
+<meta property="article:modified_time" content="2021-05-28T03:14:46.085Z">
 <meta property="article:author" content="Laura Sanchz">
-<meta property="article:tag" content="时序预测">
 <meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="几何学">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic2.zhimg.com/80/v2-0c7d6bc4090e3ee2cd1b7d6dc98141b9_720w.jpg">
 
-<link rel="canonical" href="http://example.com/2021/04/12/AI-Earth-%E6%97%B6%E5%BA%8F%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/">
+<link rel="canonical" href="http://example.com/2021/05/24/%E4%BB%A5%E5%87%A0%E4%BD%95%E5%AD%A6%E8%A7%86%E8%A7%92%E7%BB%9F%E4%B8%80%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
 
 
 <script id="page-configurations">
@@ -47,7 +49,7 @@
   };
 </script>
 
-  <title>AI-Earth-天池时序比赛总结 | Laura's Blog</title>
+  <title>Twitter 图机器学习大牛发表160页论文：以几何学视角统一深度学习 | Laura's Blog</title>
   
 
 
@@ -168,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/12/AI-Earth-%E6%97%B6%E5%BA%8F%E6%AF%94%E8%B5%9B%E6%80%BB%E7%BB%93/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/24/%E4%BB%A5%E5%87%A0%E4%BD%95%E5%AD%A6%E8%A7%86%E8%A7%92%E7%BB%9F%E4%B8%80%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/cat.png">
@@ -181,7 +183,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          AI-Earth-天池时序比赛总结
+          Twitter 图机器学习大牛发表160页论文：以几何学视角统一深度学习
         </h1>
 
         <div class="post-meta">
@@ -190,21 +192,27 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建于：2021-04-12 20:05:41 / 更新于：21:28:33" itemprop="dateCreated datePublished" datetime="2021-04-12T20:05:41+08:00">2021-04-12</time>
+              <time title="创建于：2021-05-24 21:10:28" itemprop="dateCreated datePublished" datetime="2021-05-24T21:10:28+08:00">2021-05-24</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">عُدل في</span>
+                <time title="更新于：2021-05-28 11:14:46" itemprop="dateModified" datetime="2021-05-28T11:14:46+08:00">2021-05-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%AB%9E%E8%B5%9B/" itemprop="url" rel="index"><span itemprop="name">数据竞赛</span></a>
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
                 </span>
                   ， 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%AB%9E%E8%B5%9B/%E5%A4%A9%E6%B1%A0/" itemprop="url" rel="index"><span itemprop="name">天池</span></a>
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E7%BB%9F%E4%B8%80%E8%8C%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">统一范式</span></a>
                 </span>
             </span>
 
@@ -221,14 +229,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">عدد الحروف في المقال：</span>
-              <span>1.7k</span>
+              <span>811</span>
             </span>
             <span class="post-meta-item" title="زمن القراءة">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">زمن القراءة &asymp;</span>
-              <span>2 دقائق.</span>
+              <span>1 دقائق.</span>
             </span>
 
         </div>
@@ -240,43 +248,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="时序比赛赛后总结"><a href="#时序比赛赛后总结" class="headerlink" title="时序比赛赛后总结"></a>时序比赛赛后总结</h1><blockquote>
-<p>关于时间线的问题</p>
-</blockquote>
-<p>A榜2月初打开，到3月24日截至。其实真正投入的时间也就是两周不到的时间，非常仓促。A榜每日五次被浪费掉的机会在我们最后一周焦灼尝试时十分懊悔。之后如果再参加比赛的话，一定会控制好时间线进行合理安排与模型框架的尝试，避免出现这次这种时间不够用、模型不够试的情况。附上比赛官网（我怕后面连赛题任务都记不得了hh)</p>
-<p><a target="_blank" rel="noopener" href="https://tianchi.aliyun.com/competition/entrance/531871/introduction">https://tianchi.aliyun.com/competition/entrance/531871/introduction</a></p>
+        <p>原文链接：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/369446355">https://zhuanlan.zhihu.com/p/369446355</a></p>
+<p>[TOC]</p>
+<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><p>Twitter图机器学习大牛Michael Bronstein发表了一篇长达160页的论文，试图从对称性和不变性的视角从几何上统一CNNs、GNNs、LSTMs、Transformers等典型架构。</p>
+<p> 相关论文：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2104.13478.pdf">https://arxiv.org/pdf/2104.13478.pdf</a> </p>
+<h3 id="爱尔兰根纲领"><a href="#爱尔兰根纲领" class="headerlink" title="爱尔兰根纲领"></a>爱尔兰根纲领</h3><p>1872年10月，德国埃尔兰根大学23岁的年轻教授Felix Klein撰写的关于“近期几何学研究的比较综述”，即数学史上鼎鼎大名的 “爱尔兰根纲领” 。</p>
+<p> 在欧氏几何提出近两千年后，彭色列首次构建了<strong>射影几何</strong>，高斯、波尔约、罗巴切夫斯基提出了<strong>双曲几何</strong>，黎曼提出了<strong>椭圆几何</strong>，这说明我们可以建立一个**<u>由各种几何学组成的完整体系</u>**。然而，这些方向迅速分化为各个独立的研究领域。于是，那个时期的许多数学家纷纷思考，不同的几何学分支相互之间有何关系，究竟应该如何「定义」几何？ </p>
+<p> <strong>Klein</strong> 突破性地提出将几何定义为<strong>对不变性的研究</strong>，即研究在**<u>某类变换下保持不变的结构（对称性）</u><strong>。Klein  通过</strong>群论<strong>形式化定义了这种变换，并且使用</strong>群<strong>及其</strong>子群**的层次对由它们产生的不同几何进行分类。</p>
+<p>因此，<strong>刚性运动群</strong>产生了<strong>传统的欧氏几何</strong>，而仿<strong>射或射影变换</strong>分别产生了仿射几何和射影几何。值得一提的是，爱尔兰根纲领仅仅局限于<u>齐次空间</u>，最初并不适用于<u>黎曼几何。</u> </p>
+<p><img src="https://pic2.zhimg.com/80/v2-0c7d6bc4090e3ee2cd1b7d6dc98141b9_720w.jpg"></p>
+<p>【++】Klein的爱尔兰根纲领给出了几何学的如下定义：</p>
+<p> <strong>研究在某类变换下保持不变的性质 。</strong></p>
+<p>通过保持<strong>面积、距离、角度、平行结构</strong>不变的刚性变换（建模为等距群）定义 2  维欧氏几何。仿射变换将保持平行结构，但并不能保证距离或面积不变。<u>射影变换的不变性</u>最弱，只保持交点和交比不变，对应于以上三种变换中最大的群。因此，Klein 认为**<u>射影几何</u>**是最为通用的。 </p>
+<p>稍显夸张地说，物理学就是对<strong>对称性</strong>的研究。</p>
 <blockquote>
-<p>关于建模思路与顺序的问题</p>
+<p>最简单情况下，有监督机器学习的本质</p>
 </blockquote>
-<p>我们三个其实对时序预测都不是很熟悉，在baseline基础之上，小管自己尝试了LSTM+RNN，之后尝试ResNet+Tranformer发现效果出奇的好（初登场即巅峰，3月25日之后的一周努力全部in vain),但其实并没有做足时序预测问题的调研。</p>
-<p>后来断断续续尝试过将12个预训练模型改成一个规模较大的Resnet再加深transformer的层数，然而效果并不好。</p>
-<p>由于线上线下分差较大，因此师弟认为valid_score的借鉴意义不大。询问雪林的意见之后，我们认为可以将之前效果最好的119个epoch模型用全部的数据进行retrain，然而效果也并不是很好。</p>
-<p>询问了张辉师兄，他说直接用imagenet（CV领域）中的预训练进行训练没有任何道理可讲，应该自己用数据进行训练（用每一个月的nino指数进行训练)，再加载6层的transformer进行训练，然而发现效果也不好（线上残酷的稳定在28分左右）。</p>
-<p>后来尝试大改模型框架，用AAAI2021的best paper中宣称超过transformer的结构informer。用上了decoder，也尝试了transformer的decoder结构，但是！效果都不好！</p>
-<p>心态炸裂。</p>
-<p>后来DDL之后看到有人用transformer线上竟然达到了41分（气煞我也）难道是我们的使用方式不对么？</p>
-<blockquote>
-<p>大佬们的tricks</p>
-</blockquote>
-<p>赛后看群消息，有大佬对时间空间数据分别做训练（这个我是没听懂，小管回头补充一下）。我们神经网络的模型好像就没有集成了。</p>
-<p>时序数据的交叉验证也没有做（K-fold确实不可取，因为会因为数据泄露问题造成时间穿越），但是后来适用于时序数据的交叉验证（timeseriessplit)、rolling origin也全都没有尝试，时间还是太紧张了。所以回到开篇，A榜的时间没有好好利用起来，所以损失了大量的五次机会。</p>
-<p>pytorch的框架也要多用用熟悉一下才行（为毕设服务！）</p>
-<p>革命尚未成功，同志仍需努力！要有打不死的小强精神！</p>
-<p>“我是不会输的哦。”</p>
-<blockquote>
-<p>数据预处理部分</p>
-</blockquote>
-<p>个人觉得数据的预处理部分还是十分重要，打比赛还是得先分析我们所获得的数据，根据数据的实际情况再进行下一步的建模（我看群里有人专门分析了世界地区的不同区域的气象情况，还考虑了针对不同区域分别进行建模）。这次的数据预处理部分也是直接使用的baseline，后面自己再有想法去改造自己的数据预处理部分也来不及了。所以有时间最好还是自己从头实现。 另外，群内的说41分使用Transformer结构的，据说是对空间和时间分别使用Transformer结构，可能也就是两种Transformer的叠加。</p>
-<blockquote>
-<p>时间分配的问题</p>
-</blockquote>
-<p>我们大部分时间都在尝试不同的模型架构，也就是尝试通过模型来提升分数。我感觉从这一次经验中得到的教训就是，我们在瞎尝试模型，并且没有方法验证它的正确性。最终感受下来，一个比赛正确的打法应该有几点。</p>
-<ul>
-<li>先对比赛赛题进行充分的调研，先调查类似比赛的Top解决方案或最新的（并且较好的）论文文献，先看看他们的解决思路，再对赛题下手。</li>
-<li>合理的对数据进行预处理/后处理。先分析数据本身的特性，充分利用好给的数据。</li>
-<li>先选取合理的线下验证方案，再去尝试不同的模型（不然根本不知道模型的好坏）。</li>
-<li>利用好线下的每次提交机会，保持良好的代码习惯，记录每次模型的修改/运行记录，保存每次模型的得分结果，合理的控制变量去调整模型架构/数据预处理部分。一定要整理好，不然会太乱。</li>
-</ul>
 
     </div>
 
@@ -287,8 +274,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E6%97%B6%E5%BA%8F%E9%A2%84%E6%B5%8B/" rel="tag"><i class="fa fa-tag"></i> 时序预测</a>
               <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E5%87%A0%E4%BD%95%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 几何学</a>
           </div>
 
         
@@ -297,13 +284,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/02/27/%E6%AF%8F%E6%97%A5%E6%91%98%E5%BD%95-1/" rel="prev" title="每日摘录">
-      <i class="fa fa-chevron-left"></i> 每日摘录
+    <a href="/2021/05/18/Transformer%EF%BC%9A%E7%A7%91%E6%99%AE%E5%90%91/" rel="prev" title="Transformer相关理解（科普向）">
+      <i class="fa fa-chevron-left"></i> Transformer相关理解（科普向）
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/05/08/Attention%E5%8F%AF%E8%A7%86%E5%8C%96/" rel="next" title="Attention visualization">
-      Attention visualization <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -374,7 +358,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%B6%E5%BA%8F%E6%AF%94%E8%B5%9B%E8%B5%9B%E5%90%8E%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">时序比赛赛后总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E8%AF%AD"><span class="nav-number">1.</span> <span class="nav-text">导语</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%88%B1%E5%B0%94%E5%85%B0%E6%A0%B9%E7%BA%B2%E9%A2%86"><span class="nav-number">1.1.</span> <span class="nav-text">爱尔兰根纲领</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
