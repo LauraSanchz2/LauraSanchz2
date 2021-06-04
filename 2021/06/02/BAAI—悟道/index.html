@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="全球最大万亿模型的构建——悟道发布会2021年6月1日一年一度的BAAI智源大会在北京举行，清华大学教授、智源研究院学术副院长唐杰教授在开幕式上发布了【悟道2.0】人工智能巨模型，以1.75 万亿参数量打破了此前谷歌 Switch Transformer 预训练模型创造的 1.6 万亿参数记录，成为了全球最大的预训练模型。 视频欣赏： https:&#x2F;&#x2F;weibo.com&#x2F;tv&#x2F;show&#x2F;1034:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="悟道——全球最大万亿模型的构建">
+<meta property="og:url" content="http://example.com/2021/06/02/BAAI%E2%80%94%E6%82%9F%E9%81%93/index.html">
+<meta property="og:site_name" content="Laura&#39;s Blog">
+<meta property="og:description" content="全球最大万亿模型的构建——悟道发布会2021年6月1日一年一度的BAAI智源大会在北京举行，清华大学教授、智源研究院学术副院长唐杰教授在开幕式上发布了【悟道2.0】人工智能巨模型，以1.75 万亿参数量打破了此前谷歌 Switch Transformer 预训练模型创造的 1.6 万亿参数记录，成为了全球最大的预训练模型。 视频欣赏： https:&#x2F;&#x2F;weibo.com&#x2F;tv&#x2F;show&#x2F;1034:">
+<meta property="og:locale">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-7228430e9a6f276967abb97b6e0db9a2_1440w.jpg?source=172ae18b">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-e66e13aabf25de8559ee8bda28349d58_720w.jpg">
+<meta property="article:published_time" content="2021-06-02T13:19:44.074Z">
+<meta property="article:modified_time" content="2021-06-03T00:46:24.884Z">
+<meta property="article:author" content="Laura Sanchz">
+<meta property="article:tag" content="BAAI">
+<meta property="article:tag" content="THUNLP">
+<meta property="article:tag" content="悟道">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.zhimg.com/v2-7228430e9a6f276967abb97b6e0db9a2_1440w.jpg?source=172ae18b">
+
+<link rel="canonical" href="http://example.com/2021/06/02/BAAI%E2%80%94%E6%82%9F%E9%81%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>悟道——全球最大万亿模型的构建 | Laura's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Laura's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叮咚！被你发现一枚宝藏女孩！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/02/BAAI%E2%80%94%E6%82%9F%E9%81%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cat.png">
+      <meta itemprop="name" content="Laura Sanchz">
+      <meta itemprop="description" content="跳一跳，够得到。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Laura's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          悟道——全球最大万亿模型的构建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建于：2021-06-02 21:19:44" itemprop="dateCreated datePublished" datetime="2021-06-02T21:19:44+08:00">2021-06-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">عُدل في</span>
+                <time title="更新于：2021-06-03 08:46:24" itemprop="dateModified" datetime="2021-06-03T08:46:24+08:00">2021-06-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E6%9C%AF%E5%89%8D%E6%B2%BF/" itemprop="url" rel="index"><span itemprop="name">学术前沿</span></a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E6%9C%AF%E5%89%8D%E6%B2%BF/BAAI/" itemprop="url" rel="index"><span itemprop="name">BAAI</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="مشاهدات" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">مشاهدات：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="عدد الحروف في المقال">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">عدد الحروف في المقال：</span>
+              <span>2.6k</span>
+            </span>
+            <span class="post-meta-item" title="زمن القراءة">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">زمن القراءة &asymp;</span>
+              <span>2 دقائق.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="全球最大万亿模型的构建——悟道发布会"><a href="#全球最大万亿模型的构建——悟道发布会" class="headerlink" title="全球最大万亿模型的构建——悟道发布会"></a>全球最大万亿模型的构建——悟道发布会</h2><p>2021年6月1日一年一度的BAAI智源大会在北京举行，清华大学教授、智源研究院学术副院长<strong>唐杰教授</strong>在开幕式上发布了【悟道2.0】人工智能巨模型，以1.75 万亿参数量打破了此前谷歌 Switch Transformer 预训练模型创造的 1.6 万亿参数记录，成为了全球最大的预训练模型。</p>
+<p>视频欣赏：</p>
+<p><a target="_blank" rel="noopener" href="https://weibo.com/tv/show/1034:4643275131519073?from=old_pc_videoshow">https://weibo.com/tv/show/1034:4643275131519073?from=old_pc_videoshow</a></p>
+<p>本文将对“悟道”发布会的相关报告做主要内容的梳理，以保持对学术前沿的敏感度。</p>
+<h2 id="1-巨模型的提出背景"><a href="#1-巨模型的提出背景" class="headerlink" title="1. 巨模型的提出背景"></a>1. 巨模型的提出背景</h2><p>介绍一下<strong>悟道</strong>提出的大背景吧。</p>
+<ul>
+<li>2020.5，OpenAI发布了拥有 1750 亿参数量的预训练模型 GPT-3，它不仅能够写文章、答题、翻译，还具备多轮对话、敲代码、数学计算等能力。</li>
+<li>GPT-3所使用的最大训练数据集在处理前达到了 45TB，当绝对的数据遇上绝对的算力，仿佛已经可以为所欲为。这给科研人员带来了一个信号，”GPT-3将改变世界。真正的AI要来了。”</li>
+<li>2021.1，谷歌大脑发布了Switch Trasformer架构，将语言模型的参数量扩展到了 1.6 万亿，又一次刷新了大模型的参数纪录。<ul>
+<li>【优点】Switch Transformer 简化了 <strong>MoE(Mixture of Experts)</strong> 的路由算法（routing algorithm），设计了直观的改进模型，使得通信成本和计算成本都大大降低。</li>
+<li>【缺点】 <strong>MoE</strong> 离不开对谷歌分布式训练框架 mesh-tensorflow 和 Google 定制硬件 TPU 的依赖，抬高了应用和研究的门槛，绝⼤多数人无法得到使用与研究机会。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://pic1.zhimg.com/v2-7228430e9a6f276967abb97b6e0db9a2_1440w.jpg?source=172ae18b"></p>
+<ul>
+<li><p>在这样的潮流下，构建以中文为核心的超大规模预训练<strong>模型</strong>及<strong>生态</strong>势在必行。</p>
+<h2 id="2-悟道"><a href="#2-悟道" class="headerlink" title="2. 悟道"></a>2. 悟道</h2><h3 id="2-1-悟道1-0"><a href="#2-1-悟道1-0" class="headerlink" title="2.1 悟道1.0"></a>2.1 悟道1.0</h3><p>2021.3，中国 AI 学界迎来了第一个超大规模预训练模型「悟道」。「悟道」由智源研究院牵头，汇聚清华、北大、人大、中科院等高校院所以及诸多企业的 100 余位 AI 领域专家共同研发，从基础性能、有效使用到预训练模型扩展，提出一系列创新解决方法，取得了多项国际领先的 AI 技术突破和多个世界第一。</p>
+<h3 id="2-2-悟道2-0"><a href="#2-2-悟道2-0" class="headerlink" title="2.2 悟道2.0"></a>2.2 悟道2.0</h3><p>在1.0版本的基础上，2.0不仅在**<u>预训练模型架构、微调算法、高效预训练框架</u><strong>方面均实现了原始理论创新，在世界公认的多个 AI Benchmark 榜单上，该模型还取得了</strong><u>多项任务能力</u>**的领先地位。</p>
+</li>
+<li><p>悟道2.0 算法基石：FastMoE .（悟道团队自己提出的）</p>
+<ul>
+<li>论文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2103.13262">https://arxiv.org/abs/2103.13262</a></li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/laekov/fastmoe">https://github.com/laekov/fastmoe</a></li>
+<li><strong>特点</strong>：支持 Switch、GShard 等复杂均衡策略，⽀持不同专家、不同模型；已在阿里PAI平台上探索应用，在神威众核超算平台上成功部署。<strong>【模型“大“】</strong></li>
+<li>在 ImageNet、LAMA、LAMBADA、SuperGLUE、MSCOCO 等项目都取得了突破，获得了 9 项任务上的 SOTA。<strong>【模型“准”】</strong></li>
+</ul>
+</li>
+<li><p>技术革新：</p>
+<ul>
+<li>CogView（文本生成图像框架）,融合了 <strong>VQ-VAE</strong> 和 <strong>Transformer</strong>，在 MSCOCO FID 指标上优于 DALL·E 等网络，成为 DALL·E 之后绝无仅有的<strong>通用领域⽂图模型。</strong><ul>
+<li>论文地址 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2105.13290">https://arxiv.org/abs/2105.13290</a></li>
+<li>项目地址 <a target="_blank" rel="noopener" href="https://github.com/THUDM/CogView">https://github.com/THUDM/CogView</a></li>
+</ul>
+</li>
+<li>Inverse Prompting(唐杰老师和植麟的合力之作)，可在生成图片、文字或其他相关内容时做<strong>反向校验</strong>，使得生成结果非常高清且具有<strong>很强的逻辑性</strong>，避免过于发散。<ul>
+<li>Inverse Prompting     论文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2103.10685">https://arxiv.org/abs/2103.10685</a></li>
+<li>Inverse Prompting     论文地址：<a target="_blank" rel="noopener" href="https://github.com/THUDM/InversePrompting">https://github.com/THUDM/InversePrompting</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>悟道.文澜</strong>（主要由人大 <em>高瓴人工智能学院</em>  带队）：对标OPEN AI的CLIP，提出了<strong>双塔模型</strong>，在多语言上取得重大进展。</p>
+</li>
+<li><p><img src="https://pic1.zhimg.com/80/v2-e66e13aabf25de8559ee8bda28349d58_720w.jpg"></p>
+</li>
+<li><p><strong>「高效易用」是「悟道 2.0」的另一张标签。</strong></p>
+<p>大规模预训练模型的参数规模通常远超传统的专用人工智能模型，在算力资源、训练时间等方面消耗巨大。为了提升产业普适性和易用性，悟道团队搭建了全链路高效预训练框架「CPM-2」，使得预训练效率大幅提升。</p>
+<p>CPM-2 项目地址：<a target="_blank" rel="noopener" href="https://github.com/TsinghuaAI/CPM-Generate">https://github.com/TsinghuaAI/CPM-Generate</a></p>
+</li>
+</ul>
+<h3 id="2-3-WuDaoCorpora"><a href="#2-3-WuDaoCorpora" class="headerlink" title="2.3 WuDaoCorpora"></a>2.3 WuDaoCorpora</h3><p><strong>WuDaoCorpora2.0</strong></p>
+<p>与「悟道 1.0」同时问世的全球最大中文语料库 WuDaoCorpora1.0，也在三个月内完成了强化升级。加入多模态和对话两大全新元素后，2021 北京智源大会上，WuDaoCorpora2.0 版本正式发布。</p>
+<p>WuDaoCorpora2.0 由<strong>全球最大的纯文本数据集「WDC-Text」、全球最大的多模态数据集「WDC-ImageCaption」和全球最大的中文对话数据集「WDC-Dialogue」</strong>三部分构成，分别致力于构建微缩中文世界、打破图文模态壁垒、浓缩对话核心规律，从而形成多维度世界顶级数据库，促进中国的通用人工智能发展。</p>
+<ul>
+<li><strong>悟道文本数据集（WDC-Text）</strong></li>
+<li><strong>悟道图文数据集（WDC-ImageCaption）</strong></li>
+<li><strong>悟道对话数据集（WDC-Dialogue）</strong></li>
+</ul>
+<h3 id="2-4-关于“文澜“的一些补充"><a href="#2-4-关于“文澜“的一些补充" class="headerlink" title="2.4 关于“文澜“的一些补充"></a>2.4 关于“文澜“的一些补充</h3><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/359748833">https://zhuanlan.zhihu.com/p/359748833</a></p>
+<blockquote>
+<p><strong>文澜</strong>，目前最大的中文多模态通用预训练模型。对标的是<strong>OpenAI的CLIP</strong></p>
+</blockquote>
+<p>论文地址：</p>
+<p><a href="https://link.zhihu.com/?target=https://arxiv.org/abs/2103.06561">https://arxiv.org/abs/2103.06561</a></p>
+<p>多模态首页：</p>
+<p><a href="https://link.zhihu.com/?target=https://model.baai.ac.cn/model/wl">https://model.baai.ac.cn/model/wl</a></p>
+<p>从2020年9月开始，通过一系列的实验和探索，文澜研发团队独立提出了<strong>基于多模态对比学习</strong>的<strong>双塔结构</strong>，跟2021年1月发布的OpenAI CLIP在模型结构上不谋而合。</p>
+<p>文澜团队推出的第一代图文互检模型在论文中叫做**<u>BriVL (Bridging Vision and Language)</u>**，BriVL具有如下四个特点和优势：</p>
+<ul>
+<li><strong>基于视觉-语言</strong>弱相关的假设（水果蛋糕配文的例子）</li>
+<li>将多模态与对比学习算法相结合</li>
+<li>网络结构灵活，方便实际部署</li>
+<li>目前最大的中文多模态通用预训练模型</li>
+</ul>
+<p>文澜的API文档：<a href="https://link.zhihu.com/?target=https://model.baai.ac.cn/api">https://model.baai.ac.cn/api </a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/BAAI/" rel="tag"><i class="fa fa-tag"></i> BAAI</a>
+              <a href="/tags/THUNLP/" rel="tag"><i class="fa fa-tag"></i> THUNLP</a>
+              <a href="/tags/%E6%82%9F%E9%81%93/" rel="tag"><i class="fa fa-tag"></i> 悟道</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/24/%E4%BB%A5%E5%87%A0%E4%BD%95%E5%AD%A6%E8%A7%86%E8%A7%92%E7%BB%9F%E4%B8%80%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="prev" title="Twitter 图机器学习大牛发表160页论文：以几何学视角统一深度学习">
+      <i class="fa fa-chevron-left"></i> Twitter 图机器学习大牛发表160页论文：以几何学视角统一深度学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/02/%E6%A4%8D%E9%BA%9F%E5%85%B6%E4%BA%BA/" rel="next" title="【信仰】植麟专访：开挂人生的方法论">
+      【信仰】植麟专访：开挂人生的方法论 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  <div>
+      
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+              -------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------
+        </div>
+    
+</div>
+      
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E7%90%83%E6%9C%80%E5%A4%A7%E4%B8%87%E4%BA%BF%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%9E%84%E5%BB%BA%E2%80%94%E2%80%94%E6%82%9F%E9%81%93%E5%8F%91%E5%B8%83%E4%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">全球最大万亿模型的构建——悟道发布会</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%B7%A8%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%8F%90%E5%87%BA%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">1. 巨模型的提出背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%82%9F%E9%81%93"><span class="nav-number">3.</span> <span class="nav-text">2. 悟道</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%82%9F%E9%81%931-0"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 悟道1.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%82%9F%E9%81%932-0"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 悟道2.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-WuDaoCorpora"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 WuDaoCorpora</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%96%87%E6%BE%9C%E2%80%9C%E7%9A%84%E4%B8%80%E4%BA%9B%E8%A1%A5%E5%85%85"><span class="nav-number">3.4.</span> <span class="nav-text">2.4 关于“文澜“的一些补充</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Laura Sanchz"
+      src="/images/cat.png">
+  <p class="site-author-name" itemprop="name">Laura Sanchz</p>
+  <div class="site-description" itemprop="description">跳一跳，够得到。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LauraSanchz2" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;LauraSanchz2" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hualulu@seu.edu.cn" title="E-Mail → mailto:hualulu@seu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">true</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">مُجمل عدد الحروف：</span>
+    <span title="مُجمل عدد الحروف">20k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">مُجمل زمن القراءة &asymp;</span>
+    <span title="مُجمل زمن القراءة">19 دقائق.</span>
+</div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="إجمالي الزوار">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="إجمالي المشاهدات">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
