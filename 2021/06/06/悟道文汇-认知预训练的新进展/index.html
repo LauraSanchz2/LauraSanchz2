@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="悟道-文汇：从1.0到2.0  文汇1.0识图解决的是以下三个问题：  通用性。大炼模型时，希望我们炼的钢不只适用于做某一种螺钉。 知识的引入。提出P-Tuning，从预训练模型中获取知识。 可控性。利用Inverse Prompting, 比如我们模型在进行生成时，希望生成的内容是可控的。  文汇2.0中，从认知智能的角度识图解决四个新的问题，具体如下：  少样本学习：FewNLU。植麟认为当">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【信仰】植麟来啦！悟道文汇——认知预训练的进展报告">
+<meta property="og:url" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/index.html">
+<meta property="og:site_name" content="Laura&#39;s Blog">
+<meta property="og:description" content="悟道-文汇：从1.0到2.0  文汇1.0识图解决的是以下三个问题：  通用性。大炼模型时，希望我们炼的钢不只适用于做某一种螺钉。 知识的引入。提出P-Tuning，从预训练模型中获取知识。 可控性。利用Inverse Prompting, 比如我们模型在进行生成时，希望生成的内容是可控的。  文汇2.0中，从认知智能的角度识图解决四个新的问题，具体如下：  少样本学习：FewNLU。植麟认为当">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2021/06/06/nCdfHXB32Vyvgmp.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/06/OhHlvw8m4xkrZLn.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/06/LtCEFAruxNP4k2M.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/06/iwdfAcryVCbPxu6.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/06/oIO5xKfzqADdGir.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/06/iFzWURXT3uVqClh.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/06/BJjSbfVUl5m6AYR.png">
+<meta property="og:image" content="https://i.loli.net/2021/06/06/FdnoBLuvXbZS9rs.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606204409613.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606204543358.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606204713877.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606204829534.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606204931588.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606205027151.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606205254754.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606205443199.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606210230133.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606210241412.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606210513784.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606211635726.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606211651845.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606211748480.png">
+<meta property="og:image" content="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog/source_posts/悟道文汇-认知预训练的新进展/image-20210606211919141.png">
+<meta property="article:published_time" content="2021-06-06T09:02:31.173Z">
+<meta property="article:modified_time" content="2021-06-06T13:25:50.608Z">
+<meta property="article:author" content="Laura Sanchz">
+<meta property="article:tag" content="BAAI">
+<meta property="article:tag" content="悟道">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/06/06/nCdfHXB32Vyvgmp.png">
+
+<link rel="canonical" href="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>【信仰】植麟来啦！悟道文汇——认知预训练的进展报告 | Laura's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Laura's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叮咚！被你发现一枚宝藏女孩！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cat.png">
+      <meta itemprop="name" content="Laura Sanchz">
+      <meta itemprop="description" content="跳一跳，够得到。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Laura's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【信仰】植麟来啦！悟道文汇——认知预训练的进展报告
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建于：2021-06-06 17:02:31 / 更新于：21:25:50" itemprop="dateCreated datePublished" datetime="2021-06-06T17:02:31+08:00">2021-06-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E6%9C%AF%E5%89%8D%E6%B2%BF/" itemprop="url" rel="index"><span itemprop="name">学术前沿</span></a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E6%9C%AF%E5%89%8D%E6%B2%BF/BAAI/" itemprop="url" rel="index"><span itemprop="name">BAAI</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Aufrufe" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Aufrufe：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbole im Artikel gezählt">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbole im Artikel gezählt：</span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="Lesezeit">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Lesezeit &asymp;</span>
+              <span>2 minuten.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<h2 id="悟道-文汇：从1-0到2-0"><a href="#悟道-文汇：从1-0到2-0" class="headerlink" title="悟道-文汇：从1.0到2.0"></a>悟道-文汇：从1.0到2.0</h2></blockquote>
+<p><img src="https://i.loli.net/2021/06/06/nCdfHXB32Vyvgmp.png" alt="图片.png"></p>
+<p>文汇1.0识图解决的是以下三个问题：</p>
+<ul>
+<li><strong>通用性</strong>。大炼模型时，希望我们炼的钢不只适用于做某一种螺钉。</li>
+<li><strong>知识的引入</strong>。提出<strong>P-Tuning</strong>，从预训练模型中获取知识。</li>
+<li><strong>可控性</strong>。利用<strong>Inverse Prompting,</strong> 比如我们模型在进行生成时，希望生成的内容是可控的。</li>
+</ul>
+<p>文汇2.0中，从认知智能的角度识图解决四个新的问题，具体如下：</p>
+<ul>
+<li><strong>少样本学习</strong>：FewNLU。植麟认为当前NLP落地最关键的难点是解决少样本学习的问题。如果FewNLU可以产生与<em>完全监督学习（全样本学习）</em>同等的精度，那么必然会引起商业模式中新的效率革命。</li>
+<li><strong>鲁棒性</strong>：在实验环境下我们往往可以得到一些非常fancy的结果，但是换个场景很有可能就不work了。</li>
+<li><strong>更通用</strong>：推出了一个新的GLM的版本。</li>
+<li><strong>跨模态</strong>：CogView (文本与图片的互相生成)</li>
+</ul>
+<h3 id="1-FewNLU-效果领先的少样本学习框架"><a href="#1-FewNLU-效果领先的少样本学习框架" class="headerlink" title="1. FewNLU: 效果领先的少样本学习框架"></a>1. FewNLU: 效果领先的少样本学习框架</h3><p><img src="https://i.loli.net/2021/06/06/OhHlvw8m4xkrZLn.png" alt="图片.png"></p>
+<p>这个框架在小样本学习任务上取得了SOTA的效果，相较于之前的最好结果提升了10+百分点。</p>
+<ul>
+<li><p>*<em><u>小样本学习的难点之一：</u></em>**寻找到一个科学的评测方式（规范的测评方法）——在小样本测评方式的规范化上做了相关工作。</p>
+</li>
+<li><p><strong>少样本学习的难点之二</strong>：对超参数异常敏感</p>
+<p><img src="https://i.loli.net/2021/06/06/LtCEFAruxNP4k2M.png" alt="图片.png"></p>
+</li>
+</ul>
+<p>超参数对于结果的影响非常大，如果不能以一种有效的方式控制，那么最后跑出来的实验结果就是overfitting的。</p>
+<blockquote>
+<h3 id="规范少样本学习的测评方法（如何去做validation？）"><a href="#规范少样本学习的测评方法（如何去做validation？）" class="headerlink" title="规范少样本学习的测评方法（如何去做validation？）"></a>规范少样本学习的测评方法（如何去做validation？）</h3></blockquote>
+<ul>
+<li><p><strong>关键</strong>：引入只有32样本的dev集合（dev32)——validation set的样本数量不宜过大，因为真实场景下不可能有一两千的测试数据给你，否则小样本学习没有意义。过大样本量的测试集其实就是在overfitting这个dateset.</p>
+<ul>
+<li>解决方式：<strong>在做测试时也仅使用小样本。</strong></li>
+</ul>
+</li>
+<li><p><strong>超参数选择</strong></p>
+<ul>
+<li>对关键的超参数进行网格搜索（grid search)</li>
+<li>每个参数组合，跑多个随机种子，取dev32均值最高的参数组合</li>
+<li>对于选定的参数组合，选择dev32上最好/中位数的种子。</li>
+</ul>
+</li>
+<li><p><strong>模型选择：</strong></p>
+<ul>
+<li>训练过程中每N步在dev32上eval一次</li>
+<li>通过early stopping 选取dev32上最优的ckpt(chekpoint)</li>
+</ul>
+</li>
+<li><p>技术栈：</p>
+<ul>
+<li>P-Tuning .</li>
+<li>FlipDA</li>
+</ul>
+</li>
+<li><p><strong>通过增广提升少样本学习</strong></p>
+<ul>
+<li><p><strong>之前的方法</strong>：同义词替换、KNN替换、词嵌入替换、MLM、EDA、回传（back translation)</p>
+</li>
+<li><p>都是基于<u>简单任务（</u>比如single sentence的分类问题）、<u>弱baseline</u>（指的是 没有基于pretrain-model）进行研究</p>
+</li>
+<li><p>【++】对于<strong>少样本学习+预训练</strong>（大规模预训练模型），不仅效果不好，还经常掉点。</p>
+</li>
+<li><p>理想的数据增广方法：</p>
+<ul>
+<li>有效性</li>
+<li>鲁棒性（对少样本学习尤其关键）<ul>
+<li>不同base model</li>
+<li>不同任务</li>
+</ul>
+</li>
+<li>换言之，大多数情况能显著提升，最差情况不掉点（性能上）</li>
+</ul>
+</li>
+<li><p><strong>手工增广</strong> ：相同标签vs **<u>相反标签</u>**（做最小的改动使得标签完全相反）</p>
+</li>
+<li><p><img src="https://i.loli.net/2021/06/06/iwdfAcryVCbPxu6.png" alt="图片.png"></p>
+</li>
+<li><p>传统增广方法关于相同标签的假设</p>
+<p><img src="https://i.loli.net/2021/06/06/oIO5xKfzqADdGir.png" alt="图片.png"></p>
+<p>进行近义词替换之后，标签相反。——&gt;“相同标签”假设容易产生错误，降低了鲁棒性</p>
+</li>
+</ul>
+</li>
+<li><p>FlipDA:基于生成模型和相反标签的增广</p>
+<ul>
+<li><p>动机：</p>
+<ul>
+<li>相反标签更有效</li>
+<li>相同标签的假设不够鲁棒<img src="https://i.loli.net/2021/06/06/iFzWURXT3uVqClh.png" alt="图片.png"></li>
+</ul>
+</li>
+<li><p>上述过程中，标签反转的样本生成过程其实有点Inverse Prompt的思想，利用自然语言的对称性（A可以生成B，那么理论上B也可以生成A）</p>
+</li>
+<li><p>实验效果：<img src="https://i.loli.net/2021/06/06/BJjSbfVUl5m6AYR.png" alt="图片.png"></p>
+<p>用植麟的话说，“比较诡异的是，这是唯一一个比较work的方法。（上图中 maxDrop表示的是最大掉点数）<img src="https://i.loli.net/2021/06/06/FdnoBLuvXbZS9rs.png" alt="图片.png"></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606204409613.png" alt="image-20210606204409613"></p>
+<blockquote>
+<h3 id="CogView：效果领先的跨模态预训练"><a href="#CogView：效果领先的跨模态预训练" class="headerlink" title="CogView：效果领先的跨模态预训练"></a>CogView：效果领先的跨模态预训练</h3></blockquote>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606204543358.png" alt="image-20210606204543358"></p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606204713877.png" alt="image-20210606204713877"></p>
+<p>可以理解为在<strong>VQ-VAE</strong>的基础上，加了左边这个<strong>text prior</strong>（先验）<img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606204829534.png" alt="image-20210606204829534"></p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606204931588.png" alt="image-20210606204931588"></p>
+<p>采取了上述这一系列的方法来缓解数值爆炸的问题（这些问题在单模态的情况下也会出现，但是多模态的情况下这些问题尤甚）</p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606205027151.png" alt="image-20210606205027151"></p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606205254754.png" alt="image-20210606205254754"></p>
+<p>上图FID是一种度量距离的方式。</p>
+<blockquote>
+<h3 id="GLM预训练模型"><a href="#GLM预训练模型" class="headerlink" title="GLM预训练模型"></a>GLM预训练模型</h3></blockquote>
+<p>核心思路：将所有的任务转为生成任务。希望可以在一定程度上降pretraining与finetuning之间的gap.从而使得一个模型可以在不同任务上得到一个更好的结果。</p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606205443199.png" alt="image-20210606205443199"></p>
+<p>参数快到到100亿之后，发现可以对标不同领域比较好的model</p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606210230133.png" alt="image-20210606210230133"></p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606210241412.png" alt="image-20210606210241412"></p>
+<p>目前superglue榜上的第一是<strong>DeBerta</strong>.(相关报道：<strong><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1688306953815332609&amp;wfr=spider&amp;for=pc">https://baijiahao.baidu.com/s?id=1688306953815332609&amp;wfr=spider&amp;for=pc</a></strong>)</p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606210513784.png" alt="image-20210606210513784"></p>
+<p>GLM模型对（描述GLM的这篇论文本身）所挖的词进行的填空中，所填的词是multi-words的，如果用BERT不会有这么好的效果。因为BERT一次只能填一个词，并且没有办法去建模上下文之间的依赖性。</p>
+<blockquote>
+<p>GML的尝试填空以及multi-token填空效果：</p>
+</blockquote>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606211635726.png" alt="image-20210606211635726"></p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606211651845.png" alt="image-20210606211651845"></p>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606211748480.png" alt="image-20210606211748480"></p>
+<p>GLM甚至可以帮我们做长文本生成（植麟说以后paper咱都不用动手写了） 还可以做的任务有 style transfer等等</p>
+<blockquote>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3></blockquote>
+<p><img src="/2021/06/06/%E6%82%9F%E9%81%93%E6%96%87%E6%B1%87-%E8%AE%A4%E7%9F%A5%E9%A2%84%E8%AE%AD%E7%BB%83%E7%9A%84%E6%96%B0%E8%BF%9B%E5%B1%95/LuluBlog/blog\source_posts\悟道文汇-认知预训练的新进展\image-20210606211919141.png" alt="image-20210606211919141"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/BAAI/" rel="tag"><i class="fa fa-tag"></i> BAAI</a>
+              <a href="/tags/%E6%82%9F%E9%81%93/" rel="tag"><i class="fa fa-tag"></i> 悟道</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/02/%E5%94%90%E6%9D%B0%E8%80%81%E5%B8%88/" rel="prev" title="【信仰】唐杰老师">
+      <i class="fa fa-chevron-left"></i> 【信仰】唐杰老师
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  <div>
+      
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+              -------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------
+        </div>
+    
+</div>
+      
+  </div>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%82%9F%E9%81%93-%E6%96%87%E6%B1%87%EF%BC%9A%E4%BB%8E1-0%E5%88%B02-0"><span class="nav-number">1.</span> <span class="nav-text">悟道-文汇：从1.0到2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-FewNLU-%E6%95%88%E6%9E%9C%E9%A2%86%E5%85%88%E7%9A%84%E5%B0%91%E6%A0%B7%E6%9C%AC%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6"><span class="nav-number">1.1.</span> <span class="nav-text">1. FewNLU: 效果领先的少样本学习框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E8%8C%83%E5%B0%91%E6%A0%B7%E6%9C%AC%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%B5%8B%E8%AF%84%E6%96%B9%E6%B3%95%EF%BC%88%E5%A6%82%E4%BD%95%E5%8E%BB%E5%81%9Avalidation%EF%BC%9F%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">规范少样本学习的测评方法（如何去做validation？）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CogView%EF%BC%9A%E6%95%88%E6%9E%9C%E9%A2%86%E5%85%88%E7%9A%84%E8%B7%A8%E6%A8%A1%E6%80%81%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="nav-number">1.3.</span> <span class="nav-text">CogView：效果领先的跨模态预训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GLM%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.</span> <span class="nav-text">GLM预训练模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Laura Sanchz"
+      src="/images/cat.png">
+  <p class="site-author-name" itemprop="name">Laura Sanchz</p>
+  <div class="site-description" itemprop="description">跳一跳，够得到。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LauraSanchz2" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;LauraSanchz2" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hualulu@seu.edu.cn" title="E-Mail → mailto:hualulu@seu.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">true</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Insgesamt gezählte Symbole：</span>
+    <span title="Insgesamt gezählte Symbole">22k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Insgesamte Lesezeit &asymp;</span>
+    <span title="Insgesamte Lesezeit">20 minuten.</span>
+</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Alle Besucher">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Alle Aufrufe">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
